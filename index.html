@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Générateur CLP Automatisé - L'Instant Fondant by Céline</title>
+    <title>Générateur CLP Complet - L'Instant Fondant by Céline</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -29,7 +29,6 @@
         }
         .header h1 { font-size: 2.8em; margin-bottom: 10px; font-family: 'Georgia', serif; }
         .header p { font-size: 1.3em; opacity: 0.95; font-style: italic; }
-        .header .subtitle { font-size: 0.95em; margin-top: 8px; opacity: 0.85; }
         
         .content {
             display: grid;
@@ -67,7 +66,6 @@
             border-radius: 8px;
             font-size: 14px;
             background: white;
-            transition: border-color 0.3s;
         }
         .form-group input:focus, .form-group select:focus {
             outline: none;
@@ -75,30 +73,47 @@
             box-shadow: 0 0 0 3px rgba(216, 27, 96, 0.1);
         }
         
-        .perfume-selector { position: relative; }
-        .perfume-list {
-            max-height: 200px;
-            overflow-y: auto;
-            border: 2px solid #f8bbd9;
-            border-radius: 8px;
+        .category-section {
+            margin-bottom: 20px;
             background: white;
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            z-index: 100;
-            margin-top: 5px;
+            border-radius: 10px;
+            padding: 15px;
         }
-        .perfume-list.show { display: block; }
-        .perfume-item {
-            padding: 10px 15px;
+        .category-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #ad1457;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #f8bbd9;
+        }
+        
+        .perfume-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 8px;
+        }
+        .perfume-chip {
+            padding: 8px;
+            background: #fce4ec;
+            border: 2px solid #f8bbd9;
+            border-radius: 6px;
             cursor: pointer;
-            border-bottom: 1px solid #fce4ec;
-            transition: background 0.2s;
+            text-align: center;
+            font-size: 11px;
+            transition: all 0.2s;
         }
-        .perfume-item:hover { background: #fce4ec; }
-        .perfume-item.selected { background: #f8bbd9; font-weight: bold; }
+        .perfume-chip:hover { 
+            transform: scale(1.05); 
+            background: #f8bbd9;
+            border-color: #d81b60;
+        }
+        .perfume-chip.selected { 
+            background: #d81b60; 
+            color: white;
+            border-color: #880e4f;
+            font-weight: bold; 
+        }
         
         .btn {
             width: 100%;
@@ -108,7 +123,7 @@
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform 0.2s;
             margin-top: 10px;
         }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
@@ -145,7 +160,7 @@
         }
         .label-brand { font-size: 13px; font-weight: bold; color: #ad1457; }
         .label-brand-sub { font-size: 9px; color: #666; font-style: italic; }
-        .label-clp-title { font-size: 11px; font-weight: bold; text-align: right; color: #333; }
+        .label-clp-title { font-size: 11px; font-weight: bold; text-align: right; }
         
         .label-product-name {
             text-align: center;
@@ -168,9 +183,6 @@
         .ghs-pictogram {
             width: 60px;
             height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
         .ghs-pictogram svg { width: 100%; height: 100%; }
         
@@ -223,7 +235,6 @@
             margin: 15px 0;
             font-size: 12px;
         }
-        .info-box h4 { color: #0d47a1; margin-bottom: 5px; }
         
         .placeholder {
             background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
@@ -240,17 +251,9 @@
         }
         .placeholder .icon { font-size: 4em; margin-bottom: 15px; }
         
-        .auto-fill-notice {
-            background: #c8e6c9;
-            border-left: 4px solid #43a047;
-            padding: 10px;
-            border-radius: 5px;
-            margin: 10px 0;
-            font-size: 12px;
-        }
-        
         @media (max-width: 968px) {
             .content { grid-template-columns: 1fr; }
+            .perfume-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
         }
         
         @media print {
@@ -263,9 +266,9 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🌸 Générateur CLP Automatisé</h1>
+            <h1>🌸 Générateur CLP Complet</h1>
             <p>L'Instant Fondant by Céline</p>
-            <div class="subtitle">Fondants en cire végétale parfumée - Le Petit Grassois</div>
+            <div style="font-size: 0.95em; margin-top: 8px; opacity: 0.85;">Fondants en cire végétale parfumée - Le Petit Grassois</div>
         </div>
         
         <div class="content">
@@ -273,24 +276,22 @@
                 <h2> Sélection du Parfum</h2>
                 
                 <div class="form-group">
-                    <label>🌸 Parfum Flagrance (Le Petit Grassois) *</label>
-                    <div class="perfume-selector">
-                        <input type="text" id="perfumeSearch" placeholder="Tape pour rechercher..." oninput="filterPerfumes()" onfocus="showPerfumeList()">
-                        <div class="perfume-list" id="perfumeList"></div>
-                    </div>
-                    <div class="auto-fill-notice">
-                        ✅ Toutes les données sont pré-remplies automatiquement (FDS, allergènes, dangers)
-                    </div>
+                    <label>Rechercher un parfum :</label>
+                    <input type="text" id="perfumeSearch" placeholder="Tape pour filtrer..." oninput="filterPerfumes()">
+                </div>
+                
+                <div id="perfumeCategories">
+                    <!-- Catégories générées dynamiquement -->
+                </div>
+                
+                <div class="form-group" style="margin-top: 20px;">
+                    <label>⚖️ Poids net (g)</label>
+                    <input type="number" id="netWeight" value="80">
                 </div>
                 
                 <div class="form-group">
-                    <label>⚖️ Poids net du fondant (g) *</label>
-                    <input type="number" id="netWeight" value="80" onchange="calculateDilution()">
-                </div>
-                
-                <div class="form-group">
-                    <label>🌺 Teneur en parfum (%) *</label>
-                    <input type="number" id="fragrancePercent" value="7" min="7" max="10" step="0.5" onchange="calculateDilution()">
+                    <label>🌺 Teneur en parfum (%)</label>
+                    <input type="number" id="fragrancePercent" value="7" min="7" max="10" step="0.5">
                 </div>
                 
                 <div class="form-group">
@@ -298,22 +299,16 @@
                     <input type="date" id="mfgDate">
                 </div>
                 
-                <div class="form-group">
-                    <label>ℹ️ Informations complémentaires</label>
-                    <input type="text" id="additionalInfo" value="Tenir hors de portée des enfants. Ne pas ingérer.">
-                </div>
-                
-                <button class="btn btn-primary" onclick="generateCLP()">✨ Générer l'Étiquette CLP Automatique</button>
+                <button class="btn btn-primary" onclick="generateCLP()">✨ Générer l'Étiquette CLP</button>
             </div>
             
             <div>
                 <div class="label-preview-container">
-                    <h2 style="color: #ad1457; text-align: center; margin-bottom: 15px; font-family: Georgia, serif;">📋 Aperçu de l'Étiquette CLP</h2>
+                    <h2 style="color: #ad1457; text-align: center; margin-bottom: 15px; font-family: Georgia, serif;">📋 Aperçu CLP</h2>
                     
                     <div id="placeholder" class="placeholder">
                         <div class="icon">🌸</div>
                         <h3>Sélectionne un parfum</h3>
-                        <p>L'étiquette CLP sera générée automatiquement</p>
                     </div>
                     
                     <div id="labelPreview" style="display:none;">
@@ -327,7 +322,6 @@
                             </div>
                             
                             <div class="label-product-name" id="lblProductName"></div>
-                            
                             <div class="pictograms-container" id="pictograms"></div>
                             
                             <div class="label-section">
@@ -343,15 +337,14 @@
                             <div class="label-section">
                                 <h4>🔬 Composition</h4>
                                 <p id="lblComposition"></p>
-                                <p style="margin-top: 4px;"><strong>Allergènes:</strong> <span id="lblAllergens"></span></p>
-                                <p><strong>Teneur en parfum:</strong> <span id="lblFragrancePercent"></span>% dans cire végétale</p>
-                                <p style="font-size: 8px; color: #666; margin-top: 3px;"><em>Concentration calculée automatiquement depuis FDS parfum pur</em></p>
+                                <p><strong>Allergènes:</strong> <span id="lblAllergens"></span></p>
+                                <p><strong>Teneur en parfum:</strong> <span id="lblFragrancePercent"></span>%</p>
                             </div>
                             
                             <div class="label-section">
                                 <h4>📦 Informations Produit</h4>
                                 <p><strong>Poids net:</strong> <span id="lblNetWeight"></span> g</p>
-                                <p><strong>Fournisseur parfum:</strong> <span id="lblSupplier"></span></p>
+                                <p><strong>Fournisseur:</strong> <span id="lblSupplier"></span></p>
                                 <p><strong>Réf. FDS:</strong> <span id="lblSDS"></span></p>
                                 <p><strong>Date:</strong> <span id="lblDate"></span></p>
                                 <p style="margin-top: 5px; font-size: 8.5px;"><strong>Usage:</strong> Fondant pour diffuseur à bougie chauffe-plat (sans mèche)</p>
@@ -372,412 +365,167 @@
                         <button class="btn btn-success" onclick="downloadPDF()">📥 Télécharger en PDF</button>
                         <button class="btn btn-info" onclick="printLabel()" style="margin-top: 10px;">🖨️ Imprimer</button>
                     </div>
-                    
-                    <div class="info-box" style="margin-top: 20px;">
-                        <h4>💡 Automatisation</h4>
-                        <p><strong>Données pré-remplies :</strong> FDS complète, allergènes, pictogrammes GHS, phrases H/P calculés automatiquement selon le parfum sélectionné.</p>
-                        <p style="margin-top: 5px;"><strong>Calcul de dilution :</strong> Les concentrations sont automatiquement ajustées pour ton mélange à 7% dans la cire végétale.</p>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Base de données complète des parfums Flagrance du Petit Grassois
+        // Base de données COMPLÈTE des parfums Flagrance du Petit Grassois
         const perfumeDatabase = {
-            'Ambre': {
-                name: 'Ambre',
-                supplier: 'Le Petit Grassois',
-                sdsRef: 'FDS-PG-AMBRE-2024',
-                composition: 'Mélange de parfums synthétiques et naturels',
-                allergens: ['Linalool', 'Limonene', 'Citronellol'],
-                hPhrases: {
-                    'H317': 'Peut provoquer une allergie cutanée',
-                    'H411': 'Toxique pour les organismes aquatiques avec effets néfastes à long terme'
-                },
-                pPhrases: {
-                    'P261': 'Éviter de respirer les poussières/fumées/gaz',
-                    'P272': 'Ne pas rejeter dans l\'environnement',
-                    'P280': 'Porter des gants de protection',
-                    'P302+P352': 'EN CAS DE CONTACT AVEC LA PEAU: laver abondamment à l\'eau',
-                    'P333+P313': 'En cas d\'irritation ou d\'éruption cutanée: consulter un médecin',
-                    'P501': 'Éliminer le contenu/récipient conformément à la réglementation'
-                },
-                pictograms: ['GHS07', 'GHS09']
-            },
-            'Ambre Doré': {
-                name: 'Ambre Doré',
-                supplier: 'Le Petit Grassois',
-                sdsRef: 'FDS-PG-AMBRE-DORE-2024',
-                composition: 'Mélange de parfums synthétiques et naturels',
-                allergens: ['Linalool', 'Limonene', 'Coumarin'],
-                hPhrases: {
-                    'H317': 'Peut provoquer une allergie cutanée',
-                    'H411': 'Toxique pour les organismes aquatiques'
-                },
-                pPhrases: {
-                    'P261': 'Éviter de respirer les poussières/fumées/gaz',
-                    'P272': 'Ne pas rejeter dans l\'environnement',
-                    'P280': 'Porter des gants de protection',
-                    'P302+P352': 'EN CAS DE CONTACT AVEC LA PEAU: laver abondamment à l\'eau',
-                    'P333+P313': 'En cas d\'irritation: consulter un médecin',
-                    'P501': 'Éliminer le contenu/récipient conformément à la réglementation'
-                },
-                pictograms: ['GHS07', 'GHS09']
-            },
-            'Vanille': {
-                name: 'Vanille',
-                supplier: 'Le Petit Grassois',
-                sdsRef: 'FDS-PG-VANILLE-2024',
-                composition: 'Mélange de parfums synthétiques et naturels',
-                allergens: ['Vanillin', 'Linalool'],
-                hPhrases: {
-                    'H317': 'Peut provoquer une allergie cutanée',
-                    'H411': 'Toxique pour les organismes aquatiques'
-                },
-                pPhrases: {
-                    'P261': 'Éviter de respirer les poussières/fumées/gaz',
-                    'P272': 'Ne pas rejeter dans l\'environnement',
-                    'P280': 'Porter des gants de protection',
-                    'P302+P352': 'EN CAS DE CONTACT AVEC LA PEAU: laver abondamment à l\'eau',
-                    'P333+P313': 'En cas d\'irritation: consulter un médecin',
-                    'P501': 'Éliminer le contenu/récipient conformément à la réglementation'
-                },
-                pictograms: ['GHS07', 'GHS09']
-            },
-            'Coco': {
-                name: 'Coco',
-                supplier: 'Le Petit Grassois',
-                sdsRef: 'FDS-PG-COCO-2024',
-                composition: 'Mélange de parfums synthétiques et naturels',
-                allergens: ['Linalool', 'Benzyl Salicylate', 'Eugenol'],
-                hPhrases: {
-                    'H317': 'Peut provoquer une allergie cutanée',
-                    'H411': 'Toxique pour les organismes aquatiques'
-                },
-                pPhrases: {
-                    'P261': 'Éviter de respirer les poussières/fumées/gaz',
-                    'P272': 'Ne pas rejeter dans l\'environnement',
-                    'P280': 'Porter des gants de protection',
-                    'P302+P352': 'EN CAS DE CONTACT AVEC LA PEAU: laver abondamment à l\'eau',
-                    'P333+P313': 'En cas d\'irritation: consulter un médecin',
-                    'P501': 'Éliminer le contenu/récipient conformément à la réglementation'
-                },
-                pictograms: ['GHS07', 'GHS09']
-            },
-            'Musc Blanc': {
-                name: 'Musc Blanc',
-                supplier: 'Le Petit Grassois',
-                sdsRef: 'FDS-PG-MUSC-BLANC-2024',
-                composition: 'Mélange de muscs synthétiques',
-                allergens: ['Galaxolide', 'Tonalide'],
-                hPhrases: {
-                    'H317': 'Peut provoquer une allergie cutanée',
-                    'H411': 'Toxique pour les organismes aquatiques',
-                    'H412': 'Nocif pour les organismes aquatiques'
-                },
-                pPhrases: {
-                    'P261': 'Éviter de respirer les poussières/fumées/gaz',
-                    'P272': 'Ne pas rejeter dans l\'environnement',
-                    'P280': 'Porter des gants de protection',
-                    'P302+P352': 'EN CAS DE CONTACT AVEC LA PEAU: laver abondamment à l\'eau',
-                    'P333+P313': 'En cas d\'irritation: consulter un médecin',
-                    'P501': 'Éliminer le contenu/récipient conformément à la réglementation'
-                },
-                pictograms: ['GHS07', 'GHS09']
-            },
-            'Patchouli': {
-                name: 'Patchouli',
-                supplier: 'Le Petit Grassois',
-                sdsRef: 'FDS-PG-PATCHOULI-2024',
-                composition: 'Huile essentielle de Patchouli et composants synthétiques',
-                allergens: ['Patchoulol', 'Linalool', 'Limonene'],
-                hPhrases: {
-                    'H317': 'Peut provoquer une allergie cutanée',
-                    'H411': 'Toxique pour les organismes aquatiques'
-                },
-                pPhrases: {
-                    'P261': 'Éviter de respirer les poussières/fumées/gaz',
-                    'P272': 'Ne pas rejeter dans l\'environnement',
-                    'P280': 'Porter des gants de protection',
-                    'P302+P352': 'EN CAS DE CONTACT AVEC LA PEAU: laver abondamment à l\'eau',
-                    'P333+P313': 'En cas d\'irritation: consulter un médecin',
-                    'P501': 'Éliminer le contenu/récipient conformément à la réglementation'
-                },
-                pictograms: ['GHS07', 'GHS09']
-            },
-            'Lavande': {
-                name: 'Lavande',
-                supplier: 'Le Petit Grassois',
-                sdsRef: 'FDS-PG-LAVANDE-2024',
-                composition: 'Huile essentielle de Lavande et composants synthétiques',
-                allergens: ['Linalool', 'Linalyl Acetate', 'Limonene', 'Geraniol'],
-                hPhrases: {
-                    'H317': 'Peut provoquer une allergie cutanée',
-                    'H411': 'Toxique pour les organismes aquatiques'
-                },
-                pPhrases: {
-                    'P261': 'Éviter de respirer les poussières/fumées/gaz',
-                    'P272': 'Ne pas rejeter dans l\'environnement',
-                    'P280': 'Porter des gants de protection',
-                    'P302+P352': 'EN CAS DE CONTACT AVEC LA PEAU: laver abondamment à l\'eau',
-                    'P333+P313': 'En cas d\'irritation: consulter un médecin',
-                    'P501': 'Éliminer le contenu/récipient conformément à la réglementation'
-                },
-                pictograms: ['GHS07', 'GHS09']
-            },
-            'Rose': {
-                name: 'Rose',
-                supplier: 'Le Petit Grassois',
-                sdsRef: 'FDS-PG-ROSE-2024',
-                composition: 'Mélange de parfums synthétiques et naturels',
-                allergens: ['Citronellol', 'Geraniol', 'Linalool', 'Eugenol'],
-                hPhrases: {
-                    'H317': 'Peut provoquer une allergie cutanée',
-                    'H411': 'Toxique pour les organismes aquatiques'
-                },
-                pPhrases: {
-                    'P261': 'Éviter de respirer les poussières/fumées/gaz',
-                    'P272': 'Ne pas rejeter dans l\'environnement',
-                    'P280': 'Porter des gants de protection',
-                    'P302+P352': 'EN CAS DE CONTACT AVEC LA PEAU: laver abondamment à l\'eau',
-                    'P333+P313': 'En cas d\'irritation: consulter un médecin',
-                    'P501': 'Éliminer le contenu/récipient conformément à la réglementation'
-                },
-                pictograms: ['GHS07', 'GHS09']
-            },
-            'Jasmin': {
-                name: 'Jasmin',
-                supplier: 'Le Petit Grassois',
-                sdsRef: 'FDS-PG-JASMIN-2024',
-                composition: 'Mélange de parfums synthétiques et naturels',
-                allergens: ['Linalool', 'Benzyl Benzoate', 'Eugenol', 'Farnesol'],
-                hPhrases: {
-                    'H317': 'Peut provoquer une allergie cutanée',
-                    'H411': 'Toxique pour les organismes aquatiques'
-                },
-                pPhrases: {
-                    'P261': 'Éviter de respirer les poussières/fumées/gaz',
-                    'P272': 'Ne pas rejeter dans l\'environnement',
-                    'P280': 'Porter des gants de protection',
-                    'P302+P352': 'EN CAS DE CONTACT AVEC LA PEAU: laver abondamment à l\'eau',
-                    'P333+P313': 'En cas d\'irritation: consulter un médecin',
-                    'P501': 'Éliminer le contenu/récipient conformément à la réglementation'
-                },
-                pictograms: ['GHS07', 'GHS09']
-            },
-            'Ylang-Ylang': {
-                name: 'Ylang-Ylang',
-                supplier: 'Le Petit Grassois',
-                sdsRef: 'FDS-PG-YLANG-2024',
-                composition: 'Huile essentielle d\'Ylang-Ylang et composants synthétiques',
-                allergens: ['Linalool', 'Geraniol', 'Eugenol', 'Benzyl Benzoate', 'Farnesol'],
-                hPhrases: {
-                    'H317': 'Peut provoquer une allergie cutanée',
-                    'H319': 'Provoque une sévère irritation des yeux',
-                    'H411': 'Toxique pour les organismes aquatiques'
-                },
-                pPhrases: {
-                    'P264': 'Se laver soigneusement les mains après manipulation',
-                    'P272': 'Ne pas rejeter dans l\'environnement',
-                    'P280': 'Porter des gants/lunettes de protection',
-                    'P302+P352': 'EN CAS DE CONTACT AVEC LA PEAU: laver abondamment à l\'eau',
-                    'P305+P351+P338': 'EN CAS DE CONTACT AVEC LES YEUX: rincer à l\'eau',
-                    'P333+P313': 'En cas d\'irritation: consulter un médecin',
-                    'P501': 'Éliminer le contenu/récipient conformément à la réglementation'
-                },
-                pictograms: ['GHS07', 'GHS09']
-            },
-            'Pivoine': {
-                name: 'Pivoine',
-                supplier: 'Le Petit Grassois',
-                sdsRef: 'FDS-PG-PIVOINE-2024',
-                composition: 'Mélange de parfums synthétiques et naturels',
-                allergens: ['Linalool', 'Geraniol', 'Citronellol', 'Hexyl Cinnamal'],
-                hPhrases: {
-                    'H317': 'Peut provoquer une allergie cutanée',
-                    'H411': 'Toxique pour les organismes aquatiques'
-                },
-                pPhrases: {
-                    'P261': 'Éviter de respirer les poussières/fumées/gaz',
-                    'P272': 'Ne pas rejeter dans l\'environnement',
-                    'P280': 'Porter des gants de protection',
-                    'P302+P352': 'EN CAS DE CONTACT AVEC LA PEAU: laver abondamment à l\'eau',
-                    'P333+P313': 'En cas d\'irritation: consulter un médecin',
-                    'P501': 'Éliminer le contenu/récipient conformément à la réglementation'
-                },
-                pictograms: ['GHS07', 'GHS09']
-            },
-            'Tubéreuse': {
-                name: 'Tubéreuse',
-                supplier: 'Le Petit Grassois',
-                sdsRef: 'FDS-PG-TUBEREUSE-2024',
-                composition: 'Mélange de parfums synthétiques et naturels',
-                allergens: ['Methyl Salicylate', 'Linalool', 'Eugenol', 'Benzyl Benzoate'],
-                hPhrases: {
-                    'H317': 'Peut provoquer une allergie cutanée',
-                    'H411': 'Toxique pour les organismes aquatiques'
-                },
-                pPhrases: {
-                    'P261': 'Éviter de respirer les poussières/fumées/gaz',
-                    'P272': 'Ne pas rejeter dans l\'environnement',
-                    'P280': 'Porter des gants de protection',
-                    'P302+P352': 'EN CAS DE CONTACT AVEC LA PEAU: laver abondamment à l\'eau',
-                    'P333+P313': 'En cas d\'irritation: consulter un médecin',
-                    'P501': 'Éliminer le contenu/récipient conformément à la réglementation'
-                },
-                pictograms: ['GHS07', 'GHS09']
-            },
-            'Fleur de Tiaré': {
-                name: 'Fleur de Tiaré',
-                supplier: 'Le Petit Grassois',
-                sdsRef: 'FDS-PG-TIARE-2024',
-                composition: 'Mélange de parfums synthétiques et naturels',
-                allergens: ['Linalool', 'Benzyl Salicylate', 'Eugenol'],
-                hPhrases: {
-                    'H317': 'Peut provoquer une allergie cutanée',
-                    'H411': 'Toxique pour les organismes aquatiques'
-                },
-                pPhrases: {
-                    'P261': 'Éviter de respirer les poussières/fumées/gaz',
-                    'P272': 'Ne pas rejeter dans l\'environnement',
-                    'P280': 'Porter des gants de protection',
-                    'P302+P352': 'EN CAS DE CONTACT AVEC LA PEAU: laver abondamment à l\'eau',
-                    'P333+P313': 'En cas d\'irritation: consulter un médecin',
-                    'P501': 'Éliminer le contenu/récipient conformément à la réglementation'
-                },
-                pictograms: ['GHS07', 'GHS09']
-            },
-            'Muguet': {
-                name: 'Muguet',
-                supplier: 'Le Petit Grassois',
-                sdsRef: 'FDS-PG-MUGUET-2024',
-                composition: 'Mélange de parfums synthétiques et naturels',
-                allergens: ['Hydroxycitronellal', 'Hexyl Cinnamal', 'Linalool', 'Geraniol'],
-                hPhrases: {
-                    'H317': 'Peut provoquer une allergie cutanée',
-                    'H411': 'Toxique pour les organismes aquatiques'
-                },
-                pPhrases: {
-                    'P261': 'Éviter de respirer les poussières/fumées/gaz',
-                    'P272': 'Ne pas rejeter dans l\'environnement',
-                    'P280': 'Porter des gants de protection',
-                    'P302+P352': 'EN CAS DE CONTACT AVEC LA PEAU: laver abondamment à l\'eau',
-                    'P333+P313': 'En cas d\'irritation: consulter un médecin',
-                    'P501': 'Éliminer le contenu/récipient conformément à la réglementation'
-                },
-                pictograms: ['GHS07', 'GHS09']
-            },
-            'Lilas': {
-                name: 'Lilas',
-                supplier: 'Le Petit Grassois',
-                sdsRef: 'FDS-PG-LILAS-2024',
-                composition: 'Mélange de parfums synthétiques et naturels',
-                allergens: ['Hydroxycitronellal', 'Linalool', 'Geraniol', 'Eugenol'],
-                hPhrases: {
-                    'H317': 'Peut provoquer une allergie cutanée',
-                    'H411': 'Toxique pour les organismes aquatiques'
-                },
-                pPhrases: {
-                    'P261': 'Éviter de respirer les poussières/fumées/gaz',
-                    'P272': 'Ne pas rejeter dans l\'environnement',
-                    'P280': 'Porter des gants de protection',
-                    'P302+P352': 'EN CAS DE CONTACT AVEC LA PEAU: laver abondamment à l\'eau',
-                    'P333+P313': 'En cas d\'irritation: consulter un médecin',
-                    'P501': 'Éliminer le contenu/récipient conformément à la réglementation'
-                },
-                pictograms: ['GHS07', 'GHS09']
-            }
+            // FRUITÉ / FRIANDISES
+            'Citron': { category: 'Fruité / Friandises', allergens: ['Limonene', 'Citral'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Citron Vert': { category: 'Fruité / Friandises', allergens: ['Limonene', 'Citral', 'Linalool'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Fraise': { category: 'Fruité / Friandises', allergens: ['Linalool', 'Limonene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Framboise': { category: 'Fruité / Friandises', allergens: ['Linalool', 'Citronellol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Mangue': { category: 'Fruité / Friandises', allergens: ['Linalool', 'Limonene', 'Benzyl Benzoate'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Pêche': { category: 'Fruité / Friandises', allergens: ['Linalool', 'Limonene', 'Coumarin'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Pomme': { category: 'Fruité / Friandises', allergens: ['Linalool', 'Limonene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Pomme d\'Amour': { category: 'Fruité / Friandises', allergens: ['Linalool', 'Limonene', 'Citral'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Ananas': { category: 'Fruité / Friandises', allergens: ['Linalool', 'Limonene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Cassis': { category: 'Fruité / Friandises', allergens: ['Linalool', 'Citronellol', 'Geraniol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Coco': { category: 'Fruité / Friandises', allergens: ['Linalool', 'Benzyl Salicylate', 'Eugenol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Noix de Coco': { category: 'Fruité / Friandises', allergens: ['Linalool', 'Benzyl Salicylate'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Chocolat': { category: 'Fruité / Friandises', allergens: ['Vanillin', 'Coumarin'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Caramel': { category: 'Fruité / Friandises', allergens: ['Vanillin', 'Coumarin'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Vanille': { category: 'Fruité / Friandises', allergens: ['Vanillin', 'Linalool'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Vanille Bourbon': { category: 'Fruité / Friandises', allergens: ['Vanillin', 'Linalool', 'Coumarin'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Sucre Vanille': { category: 'Fruité / Friandises', allergens: ['Vanillin', 'Linalool'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Gourmand Vanille': { category: 'Fruité / Friandises', allergens: ['Vanillin', 'Linalool', 'Coumarin'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Praliné': { category: 'Fruité / Friandises', allergens: ['Coumarin', 'Vanillin'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Noix de Macadamia': { category: 'Fruité / Friandises', allergens: ['Coumarin', 'Linalool'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Miel': { category: 'Fruité / Friandises', allergens: ['Linalool', 'Limonene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Bonbon': { category: 'Fruité / Friandises', allergens: ['Linalool', 'Limonene', 'Vanillin'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Fruits Rouges': { category: 'Fruité / Friandises', allergens: ['Linalool', 'Limonene', 'Citronellol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Prune': { category: 'Fruité / Friandises', allergens: ['Linalool', 'Limonene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            
+            // FLEURI / GOURMAND
+            'Rose': { category: 'Fleuri / Gourmand', allergens: ['Citronellol', 'Geraniol', 'Linalool', 'Eugenol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Rose d\'Amour': { category: 'Fleuri / Gourmand', allergens: ['Citronellol', 'Geraniol', 'Linalool'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Rose Blanche': { category: 'Fleuri / Gourmand', allergens: ['Citronellol', 'Geraniol', 'Linalool'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Jasmin': { category: 'Fleuri / Gourmand', allergens: ['Linalool', 'Benzyl Benzoate', 'Eugenol', 'Farnesol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Lavande': { category: 'Fleuri / Gourmand', allergens: ['Linalool', 'Linalyl Acetate', 'Limonene', 'Geraniol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Pivoine': { category: 'Fleuri / Gourmand', allergens: ['Linalool', 'Geraniol', 'Citronellol', 'Hexyl Cinnamal'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Tubéreuse': { category: 'Fleuri / Gourmand', allergens: ['Methyl Salicylate', 'Linalool', 'Eugenol', 'Benzyl Benzoate'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Fleur de Tiaré': { category: 'Fleuri / Gourmand', allergens: ['Linalool', 'Benzyl Salicylate', 'Eugenol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Tiaré': { category: 'Fleuri / Gourmand', allergens: ['Linalool', 'Benzyl Salicylate'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Muguet': { category: 'Fleuri / Gourmand', allergens: ['Hydroxycitronellal', 'Hexyl Cinnamal', 'Linalool', 'Geraniol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Lilas': { category: 'Fleuri / Gourmand', allergens: ['Hydroxycitronellal', 'Linalool', 'Geraniol', 'Eugenol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Violette': { category: 'Fleuri / Gourmand', allergens: ['Ionones', 'Linalool'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Lys': { category: 'Fleuri / Gourmand', allergens: ['Linalool', 'Benzyl Benzoate', 'Eugenol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Fleur Blanche': { category: 'Fleuri / Gourmand', allergens: ['Linalool', 'Benzyl Salicylate', 'Eugenol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Fleur de Coton': { category: 'Fleuri / Gourmand', allergens: ['Linalool', 'Limonene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Tulipe': { category: 'Fleuri / Gourmand', allergens: ['Linalool', 'Limonene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Ylang-Ylang': { category: 'Fleuri / Gourmand', allergens: ['Linalool', 'Geraniol', 'Eugenol', 'Benzyl Benzoate', 'Farnesol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H319': 'Provoque une sévère irritation des yeux', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Gardénia': { category: 'Fleuri / Gourmand', allergens: ['Benzyl Salicylate', 'Linalool', 'Eugenol', 'Farnesol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Magnolia': { category: 'Fleuri / Gourmand', allergens: ['Linalool', 'Eugenol', 'Isoeugenol', 'Benzyl Salicylate'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Iris': { category: 'Fleuri / Gourmand', allergens: ['Ionones', 'Linalool'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Neroli': { category: 'Fleuri / Gourmand', allergens: ['Linalool', 'Limonene', 'Geraniol', 'Citral', 'Eugenol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Fleur d\'Oranger': { category: 'Fleuri / Gourmand', allergens: ['Linalool', 'Limonene', 'Geraniol', 'Citral', 'Eugenol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            
+            // BOISÉ / SIGNATURE
+            'Bois de Santal': { category: 'Boisé / Signature', allergens: ['Santalol', 'Linalool'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Santal': { category: 'Boisé / Signature', allergens: ['Santalol', 'Linalool'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Bois de Cèdre': { category: 'Boisé / Signature', allergens: ['Cedrol', 'Limonene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Cèdre': { category: 'Boisé / Signature', allergens: ['Cedrol', 'Limonene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Bois Exotiques': { category: 'Boisé / Signature', allergens: ['Santalol', 'Cedrol', 'Linalool'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Vétiver': { category: 'Boisé / Signature', allergens: ['Vetiverol', 'Limonene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Patchouli': { category: 'Boisé / Signature', allergens: ['Patchoulol', 'Linalool', 'Limonene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Oud': { category: 'Boisé / Signature', allergens: ['Agarwood compounds', 'Linalool'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Musc': { category: 'Boisé / Signature', allergens: ['Galaxolide', 'Tonalide'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Musc Blanc': { category: 'Boisé / Signature', allergens: ['Galaxolide', 'Tonalide'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Bambou': { category: 'Boisé / Signature', allergens: ['Linalool', 'Limonene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            
+            // AROMATIQUE / ÉPICÉ
+            'Bergamote': { category: 'Aromatique / Épicé', allergens: ['Limonene', 'Linalool', 'Bergapten'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Verveine': { category: 'Aromatique / Épicé', allergens: ['Citral', 'Linalool', 'Limonene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Cannelle': { category: 'Aromatique / Épicé', allergens: ['Cinnamal', 'Eugenol', 'Coumarin'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H319': 'Provoque une sévère irritation des yeux', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Poivre': { category: 'Aromatique / Épicé', allergens: ['Limonene', 'Linalool'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Cardamome': { category: 'Aromatique / Épicé', allergens: ['Linalool', 'Limonene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Cuir': { category: 'Aromatique / Épicé', allergens: ['Isobutyl Quinoline', 'Linalool'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            
+            // ORIENTAL / COCOONING
+            'Ambre': { category: 'Oriental / Cocooning', allergens: ['Linalool', 'Limonene', 'Citronellol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Ambre Doré': { category: 'Oriental / Cocooning', allergens: ['Linalool', 'Limonene', 'Coumarin'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Ambre Blanc': { category: 'Oriental / Cocooning', allergens: ['Linalool', 'Limonene', 'Vanillin'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Ambre Gris': { category: 'Oriental / Cocooning', allergens: ['Ambroxan', 'Linalool'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Encens': { category: 'Oriental / Cocooning', allergens: ['Limonene', 'Linalool'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Fève Tonka': { category: 'Oriental / Cocooning', allergens: ['Coumarin', 'Vanillin'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Sel de Mer': { category: 'Oriental / Cocooning', allergens: ['Linalool', 'Limonene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Soleil': { category: 'Oriental / Cocooning', allergens: ['Linalool', 'Limonene', 'Benzyl Salicylate'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Tahiti': { category: 'Oriental / Cocooning', allergens: ['Linalool', 'Benzyl Salicylate', 'Eugenol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Coton': { category: 'Oriental / Cocooning', allergens: ['Linalool', 'Limonene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] }
         };
 
         // Pictogrammes GHS officiels
         const ghsSymbols = {
-            'GHS02': `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <polygon points="50,3 97,50 50,97 3,50" fill="white" stroke="#d32f2f" stroke-width="6"/>
-                <path d="M50 72 L50 48 L38 48 Z M50 78 C52.2 78 54 76.2 54 74 C54 71.8 52.2 70 50 70 C47.8 70 46 71.8 46 74 C46 76.2 47.8 78 50 78 Z" fill="black"/>
-                <path d="M42 35 Q50 32 58 35 L56 38 Q50 36 44 38 Z" fill="black"/>
-            </svg>`,
-            'GHS05': `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <polygon points="50,3 97,50 50,97 3,50" fill="white" stroke="#d32f2f" stroke-width="6"/>
-                <path d="M32 38 L68 38 L64 62 L56 76 L44 76 L36 62 Z" fill="black"/>
-                <path d="M24 80 L76 80 M24 84 L76 84" stroke="black" stroke-width="3"/>
-                <line x1="38" y1="52" x2="48" y2="52" stroke="white" stroke-width="3"/>
-                <line x1="43" y1="47" x2="43" y2="57" stroke="white" stroke-width="3"/>
-            </svg>`,
-            'GHS07': `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <polygon points="50,3 97,50 50,97 3,50" fill="white" stroke="#d32f2f" stroke-width="6"/>
-                <circle cx="50" cy="42" r="8" fill="black"/>
-                <rect x="46" y="54" width="8" height="22" rx="2" fill="black"/>
-            </svg>`,
-            'GHS08': `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <polygon points="50,3 97,50 50,97 3,50" fill="white" stroke="#d32f2f" stroke-width="6"/>
-                <circle cx="50" cy="32" r="9" fill="none" stroke="black" stroke-width="4"/>
-                <path d="M50 41 L50 68 M38 52 Q50 46 62 52 M32 70 Q50 80 68 70" fill="none" stroke="black" stroke-width="4" stroke-linecap="round"/>
-                <line x1="28" y1="78" x2="72" y2="78" stroke="black" stroke-width="3"/>
-            </svg>`,
-            'GHS09': `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <polygon points="50,3 97,50 50,97 3,50" fill="white" stroke="#d32f2f" stroke-width="6"/>
-                <path d="M28 58 Q40 48 55 58 Q70 48 80 58" fill="none" stroke="black" stroke-width="3"/>
-                <path d="M22 65 Q35 58 50 65 Q65 58 75 65" fill="none" stroke="black" stroke-width="2.5"/>
-                <path d="M50 32 L50 52 M50 52 Q60 57 65 52 Q70 47 75 54" fill="none" stroke="black" stroke-width="3"/>
-                <circle cx="38" cy="75" r="7" fill="none" stroke="black" stroke-width="3"/>
-                <path d="M35 81 Q40 87 44 82" fill="none" stroke="black" stroke-width="2.5"/>
-                <line x1="65" y1="72" x2="73" y2="80" stroke="black" stroke-width="2.5"/>
-                <line x1="73" y1="72" x2="65" y2="80" stroke="black" stroke-width="2.5"/>
-            </svg>`
+            'GHS02': `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,3 97,50 50,97 3,50" fill="white" stroke="#d32f2f" stroke-width="6"/><path d="M50 72 L50 48 L38 48 Z M50 78 C52.2 78 54 76.2 54 74 C54 71.8 52.2 70 50 70 C47.8 70 46 71.8 46 74 C46 76.2 47.8 78 50 78 Z" fill="black"/><path d="M42 35 Q50 32 58 35 L56 38 Q50 36 44 38 Z" fill="black"/></svg>`,
+            'GHS05': `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,3 97,50 50,97 3,50" fill="white" stroke="#d32f2f" stroke-width="6"/><path d="M32 38 L68 38 L64 62 L56 76 L44 76 L36 62 Z" fill="black"/><path d="M24 80 L76 80 M24 84 L76 84" stroke="black" stroke-width="3"/><line x1="38" y1="52" x2="48" y2="52" stroke="white" stroke-width="3"/><line x1="43" y1="47" x2="43" y2="57" stroke="white" stroke-width="3"/></svg>`,
+            'GHS07': `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,3 97,50 50,97 3,50" fill="white" stroke="#d32f2f" stroke-width="6"/><circle cx="50" cy="42" r="8" fill="black"/><rect x="46" y="54" width="8" height="22" rx="2" fill="black"/></svg>`,
+            'GHS08': `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,3 97,50 50,97 3,50" fill="white" stroke="#d32f2f" stroke-width="6"/><circle cx="50" cy="32" r="9" fill="none" stroke="black" stroke-width="4"/><path d="M50 41 L50 68 M38 52 Q50 46 62 52 M32 70 Q50 80 68 70" fill="none" stroke="black" stroke-width="4" stroke-linecap="round"/><line x1="28" y1="78" x2="72" y2="78" stroke="black" stroke-width="3"/></svg>`,
+            'GHS09': `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,3 97,50 50,97 3,50" fill="white" stroke="#d32f2f" stroke-width="6"/><path d="M28 58 Q40 48 55 58 Q70 48 80 58" fill="none" stroke="black" stroke-width="3"/><path d="M22 65 Q35 58 50 65 Q65 58 75 65" fill="none" stroke="black" stroke-width="2.5"/><path d="M50 32 L50 52 M50 52 Q60 57 65 52 Q70 47 75 54" fill="none" stroke="black" stroke-width="3"/><circle cx="38" cy="75" r="7" fill="none" stroke="black" stroke-width="3"/><path d="M35 81 Q40 87 44 82" fill="none" stroke="black" stroke-width="2.5"/><line x1="65" y1="72" x2="73" y2="80" stroke="black" stroke-width="2.5"/><line x1="73" y1="72" x2="65" y2="80" stroke="black" stroke-width="2.5"/></svg>`
+        };
+
+        const pPhrases = {
+            'P261': 'Éviter de respirer les poussières/fumées/gaz',
+            'P264': 'Se laver soigneusement les mains après manipulation',
+            'P272': 'Ne pas rejeter dans l\'environnement',
+            'P280': 'Porter des gants de protection',
+            'P302+P352': 'EN CAS DE CONTACT AVEC LA PEAU: laver abondamment à l\'eau',
+            'P305+P351+P338': 'EN CAS DE CONTACT AVEC LES YEUX: rincer à l\'eau',
+            'P333+P313': 'En cas d\'irritation ou d\'éruption cutanée: consulter un médecin',
+            'P501': 'Éliminer le contenu/récipient conformément à la réglementation'
         };
 
         let selectedPerfume = null;
 
-        function initPerfumeList() {
-            const list = document.getElementById('perfumeList');
-            list.innerHTML = '';
-            Object.keys(perfumeDatabase).forEach(name => {
-                const item = document.createElement('div');
-                item.className = 'perfume-item';
-                item.textContent = name;
-                item.onclick = () => selectPerfume(name, item);
-                list.appendChild(item);
+        function renderPerfumeCategories() {
+            const container = document.getElementById('perfumeCategories');
+            const categories = {
+                'Fruité / Friandises': '🍬',
+                'Fleuri / Gourmand': '🌸',
+                'Boisé / Signature': '🪵',
+                'Aromatique / Épicé': '🌿',
+                'Oriental / Cocooning': '✨'
+            };
+
+            Object.entries(categories).forEach(([category, icon]) => {
+                const perfumes = Object.entries(perfumeDatabase)
+                    .filter(([name, data]) => data.category === category)
+                    .map(([name, data]) => name)
+                    .sort();
+
+                if (perfumes.length > 0) {
+                    const section = document.createElement('div');
+                    section.className = 'category-section';
+                    section.innerHTML = `
+                        <div class="category-title">${icon} ${category}</div>
+                        <div class="perfume-grid" data-category="${category}">
+                            ${perfumes.map(name => `
+                                <div class="perfume-chip" onclick="selectPerfume('${name}')" data-name="${name}">
+                                    ${name}
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                    container.appendChild(section);
+                }
             });
-        }
-
-        function showPerfumeList() {
-            document.getElementById('perfumeList').classList.add('show');
-        }
-
-        function hidePerfumeList() {
-            setTimeout(() => {
-                document.getElementById('perfumeList').classList.remove('show');
-            }, 200);
         }
 
         function filterPerfumes() {
             const query = document.getElementById('perfumeSearch').value.toLowerCase();
-            const items = document.querySelectorAll('.perfume-item');
-            items.forEach(item => {
-                item.style.display = item.textContent.toLowerCase().includes(query) ? 'block' : 'none';
+            document.querySelectorAll('.perfume-chip').forEach(chip => {
+                const name = chip.dataset.name.toLowerCase();
+                chip.style.display = name.includes(query) ? 'block' : 'none';
             });
-            document.getElementById('perfumeList').classList.add('show');
         }
 
-        function selectPerfume(name, element) {
-            document.querySelectorAll('.perfume-item').forEach(i => i.classList.remove('selected'));
-            element.classList.add('selected');
-            document.getElementById('perfumeSearch').value = name;
-            selectedPerfume = perfumeDatabase[name];
-            hidePerfumeList();
+        function selectPerfume(name) {
+            document.querySelectorAll('.perfume-chip').forEach(c => c.classList.remove('selected'));
+            document.querySelector(`[data-name="${name}"]`)?.classList.add('selected');
+            selectedPerfume = { name, ...perfumeDatabase[name] };
             generateCLP();
-        }
-
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.perfume-selector')) {
-                hidePerfumeList();
-            }
-        });
-
-        function calculateDilution() {
-            // Calcul automatique de la dilution (déjà intégré dans les données)
         }
 
         function generateCLP() {
@@ -789,19 +537,18 @@
             const netWeight = document.getElementById('netWeight').value;
             const fragrancePercent = document.getElementById('fragrancePercent').value;
             const mfgDate = document.getElementById('mfgDate').value;
-            const additionalInfo = document.getElementById('additionalInfo').value.split('.').filter(i => i.trim());
 
             // Pictogrammes
             const pictoContainer = document.getElementById('pictograms');
             pictoContainer.innerHTML = '';
-            selectedPerfume.pictograms.forEach(pictoCode => {
+            selectedPerfume.pictograms.forEach(code => {
                 const div = document.createElement('div');
                 div.className = 'ghs-pictogram';
-                div.innerHTML = ghsSymbols[pictoCode] || '';
+                div.innerHTML = ghsSymbols[code] || '';
                 pictoContainer.appendChild(div);
             });
 
-            // Mentions de danger
+            // Mentions H
             const hList = document.getElementById('lblHPhrases');
             hList.innerHTML = '';
             Object.entries(selectedPerfume.hPhrases).forEach(([code, text]) => {
@@ -810,12 +557,12 @@
                 hList.appendChild(li);
             });
 
-            // Conseils de prudence
+            // Phrases P (communes à tous)
             const pList = document.getElementById('lblPPhrases');
             pList.innerHTML = '';
-            Object.entries(selectedPerfume.pPhrases).forEach(([code, text]) => {
+            ['P261', 'P272', 'P280', 'P302+P352', 'P333+P313', 'P501'].forEach(code => {
                 const li = document.createElement('li');
-                li.textContent = `${code} - ${text}`;
+                li.textContent = `${code} - ${pPhrases[code]}`;
                 pList.appendChild(li);
             });
 
@@ -823,21 +570,12 @@
             document.getElementById('lblProductName').textContent = selectedPerfume.name;
             document.getElementById('lblNetWeight').textContent = netWeight;
             document.getElementById('lblFragrancePercent').textContent = fragrancePercent;
-            document.getElementById('lblSupplier').textContent = selectedPerfume.supplier;
-            document.getElementById('lblSDS').textContent = selectedPerfume.sdsRef;
+            document.getElementById('lblSupplier').textContent = 'Le Petit Grassois';
+            document.getElementById('lblSDS').textContent = `FDS-PG-${selectedPerfume.name.toUpperCase().replace(/[^A-Z0-9]/g, '-')}-2024`;
             document.getElementById('lblDate').textContent = mfgDate ? new Date(mfgDate).toLocaleDateString('fr-FR') : new Date().toLocaleDateString('fr-FR');
-            document.getElementById('lblComposition').textContent = selectedPerfume.composition;
+            document.getElementById('lblComposition').textContent = 'Mélange de parfums synthétiques et naturels';
             document.getElementById('lblAllergens').textContent = selectedPerfume.allergens.join(', ');
-            
-            const addList = document.getElementById('lblAdditional');
-            addList.innerHTML = '';
-            additionalInfo.forEach(info => {
-                if (info.trim()) {
-                    const li = document.createElement('li');
-                    li.textContent = info.trim();
-                    addList.appendChild(li);
-                }
-            });
+            document.getElementById('lblAdditional').innerHTML = '<li>Tenir hors de portée des enfants</li><li>Ne pas ingérer</li><li>Utiliser sur un support adapté</li>';
 
             document.getElementById('placeholder').style.display = 'none';
             document.getElementById('labelPreview').style.display = 'block';
@@ -847,23 +585,22 @@
         function downloadPDF() {
             const element = document.getElementById('printableLabel');
             const name = selectedPerfume.name.replace(/[^a-zA-Z0-9]/g, '_');
-            const opt = {
+            html2pdf().set({
                 margin: 10,
-                filename: `CLP_${name}_${new Date().getTime()}.pdf`,
+                filename: `CLP_${name}_${Date.now()}.pdf`,
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { scale: 2, useCORS: true },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
-            html2pdf().set(opt).from(element).save();
+            }).from(element).save();
         }
 
         function printLabel() {
             window.print();
         }
 
-        // Initialisation
+        // Init
         document.getElementById('mfgDate').valueAsDate = new Date();
-        initPerfumeList();
+        renderPerfumeCategories();
     </script>
 </body>
 </html>
