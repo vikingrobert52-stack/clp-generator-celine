@@ -4,402 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Générateur CLP - L'Instant Fondant by Céline</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 20px; 
+            background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 50%, #e1bee7 100%);
             min-height: 100vh;
+            padding: 20px;
         }
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(156, 39, 176, 0.2);
             overflow: hidden;
         }
         .header {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background: linear-gradient(135deg, #d81b60 0%, #ad1457 50%, #880e4f 100%);
             color: white;
-            padding: 30px;
+            padding: 40px 30px;
             text-align: center;
-        }
-        .header h1 { font-size: 2.5em; margin-bottom: 10px; }
-        .header p { font-size: 1.2em; opacity: 0.9; }
-        
-        .content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            padding: 30px;
-        }
-        
-        .form-section {
-            background: #f8f9fa;
-            padding: 25px;
-            border-radius: 10px;
-        }
-        .form-section h2 {
-            color: #764ba2;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 3px solid #f5576c;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #333;
-        }
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: border-color 0.3s;
-        }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-            outline: none;
-            border-color: #f5576c;
-        }
-        .form-group textarea { resize: vertical; min-height: 80px; }
-        
-        .checkbox-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            padding: 10px;
-            background: white;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .checkbox-item input { margin-right: 10px; }
-        
-        button {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        button:hover { transform: translateY(-2px); }
-        
-        .label-preview {
-            background: white;
-            border: 3px solid #333;
-            border-radius: 10px;
-            padding: 20px;
             position: relative;
         }
-        .label-header {
-            text-align: center;
-            border-bottom: 2px solid #333;
-            padding-bottom: 15px;
-            margin-bottom: 15px;
+        .header::before {
+            content: '🌸';
+            position: absolute;
+            left: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 3em;
         }
-        .label-header h2 { color: #764ba2; font-size: 1.8em; }
-        .label-header .company { color: #f5576c; font-weight: 600; margin-top: 5px; }
-        
-        .pictograms {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin: 20px 0;
-            justify-items: center;
+        .header::after {
+            content: '🌺';
+            position: absolute;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 3em;
         }
-        .pictogram {
-            width: 80px;
-            height: 80px;
-            border: 3px solid #d32f2f;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-            background: white;
-            transform: rotate(45deg);
-        }
-        .pictogram span { transform: rotate(-45deg); }
-        
-        .label-section {
-            margin: 15px 0;
-            padding: 10px;
-            background: #f5f5f5;
-            border-radius: 5px;
-        }
-        .label-section h3 {
-            color: #333;
-            font-size: 14px;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-        }
-        .label-section p, .label-section ul {
-            font-size: 12px;
-            color: #555;
-            line-height: 1.6;
-        }
-        .label-section ul { padding-left: 20px; }
-        
-        .warning-box {
-            border: 2px solid #f5576c;
-            background: #fff5f5;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-        }
-        .warning-box h3 { color: #d32f2f; margin-bottom: 10px; }
-        
-        .info-box {
-            background: #e3f2fd;
-            border-left: 4px solid #2196f3;
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 5px;
-        }
-        
-        .print-btn {
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-            margin-top: 20px;
-        }
-        
-        @media print {
-            body * { visibility: hidden; }
-            .label-preview, .label-preview * { visibility: visible; }
-            .label-preview { position: absolute; left: 0; top: 0; width: 100%; }
-        }
-        
-        @media (max-width: 968px) {
-            .content { grid-template-columns: 1fr; }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>🌸 Générateur CLP</h1>
-            <p>L'Instant Fondant by Céline - Fondants en cire végétale parfumée</p>
-        </div>
-        
-        <div class="content">
-            <div class="form-section">
-                <h2>📝 Informations du Produit</h2>
-                
-                <div class="form-group">
-                    <label>Nom du parfum / Création florale *</label>
-                    <input type="text" id="productName" placeholder="Ex: Rose de Mai, Jasmin d'Orient...">
-                </div>
-                
-                <div class="form-group">
-                    <label>Poids net (g) *</label>
-                    <input type="number" id="netWeight" placeholder="Ex: 80">
-                </div>
-                
-                <div class="form-group">
-                    <label>Teneur en parfum (%) *</label>
-                    <input type="number" id="fragrancePercent" value="8" min="7" max="10" step="0.5">
-                    <small style="color: #666;">Entre 7% et 10% - Pas d'UFI requis</small>
-                </div>
-                
-                <div class="form-group">
-                    <label>Nom du fournisseur de parfum *</label>
-                    <input type="text" id="supplierName" placeholder="Ex: Essence & Co.">
-                </div>
-                
-                <div class="form-group">
-                    <label>Référence FDS (Safety Data Sheet)</label>
-                    <input type="text" id="sdsRef" placeholder="Ex: FDS-2024-001">
-                </div>
-                
-                <div class="form-group">
-                    <label>Date de fabrication</label>
-                    <input type="date" id="mfgDate">
-                </div>
-                
-                <h2 style="margin-top: 30px;">⚠️ Pictogrammes de Danger</h2>
-                <div class="checkbox-group">
-                    <label class="checkbox-item">
-                        <input type="checkbox" value="GHS07" data-symbol="⚠️">
-                        <span>GHS07 - Point d'exclamation</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" value="GHS08" data-symbol="🫁">
-                        <span>GHS08 - Danger santé</span>
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" value="GHS09" data-symbol="🌊">
-                        <span>GHS09 - Danger environnement</span>
-                    </label>
-                </div>
-                
-                <div class="form-group" style="margin-top: 20px;">
-                    <label>Mentions de Danger (H-phrases)</label>
-                    <textarea id="hPhrases" placeholder="Ex: H317 - Peut provoquer une allergie cutanée&#10;H411 - Toxique pour les organismes aquatiques"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label>Conseils de Prudence (P-phrases)</label>
-                    <textarea id="pPhrases" placeholder="Ex: P261 - Éviter de respirer les poussières/fumées/gaz&#10;P272 - Ne pas rejeter dans l'environnement&#10;P280 - Porter des gants de protection"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label>Informations complémentaires</label>
-                    <textarea id="additionalInfo" placeholder="Ex: Tenir hors de portée des enfants&#10;Éviter le contact avec la peau"></textarea>
-                </div>
-                
-                <button onclick="generateCLP()"> Générer l'Étiquette CLP</button>
-            </div>
-            
-            <div>
-                <div class="label-preview" id="labelPreview" style="display:none;">
-                    <div class="label-header">
-                        <h2>⚠️ CLP - Classification, Labelling, Packaging</h2>
-                        <div class="company">L'Instant Fondant by Céline</div>
-                        <div style="font-size: 12px; margin-top: 5px; color: #666;">Fondant en cire végétale parfumée</div>
-                    </div>
-                    
-                    <div class="pictograms" id="pictograms"></div>
-                    
-                    <div class="label-section">
-                        <h3>️ Produit</h3>
-                        <p><strong>Nom:</strong> <span id="lblProductName"></span></p>
-                        <p><strong>Poids net:</strong> <span id="lblNetWeight"></span> g</p>
-                        <p><strong>Teneur en parfum:</strong> <span id="lblFragrancePercent"></span>%</p>
-                    </div>
-                    
-                    <div class="warning-box">
-                        <h3>⚠️ Mentions de Danger</h3>
-                        <ul id="lblHPhrases"></ul>
-                    </div>
-                    
-                    <div class="label-section">
-                        <h3>🛡️ Conseils de Prudence</h3>
-                        <ul id="lblPPhrases"></ul>
-                    </div>
-                    
-                    <div class="info-box">
-                        <h3>📋 Informations Complémentaires</h3>
-                        <ul id="lblAdditional"></ul>
-                    </div>
-                    
-                    <div class="label-section">
-                        <h3>🏢 Fournisseur</h3>
-                        <p><strong>Parfum:</strong> <span id="lblSupplier"></span></p>
-                        <p><strong>Référence FDS:</strong> <span id="lblSDS"></span></p>
-                        <p><strong>Date:</strong> <span id="lblDate"></span></p>
-                    </div>
-                    
-                    <div style="text-align: center; margin-top: 20px; padding-top: 15px; border-top: 2px solid #333; font-size: 11px; color: #666;">
-                        <p>Conforme au Règlement (CE) n°1272/2008 (CLP)</p>
-                        <p>UFI: Non requis (concentration < 10%)</p>
-                    </div>
-                    
-                    <button class="print-btn" onclick="printLabel()">🖨️ Imprimer l'Étiquette</button>
-                </div>
-                
-                <div id="placeholder" style="background: #f8f9fa; border: 3px dashed #ddd; border-radius: 10px; padding: 40px; text-align: center; color: #999;">
-                    <h2 style="margin-bottom: 10px;">📋 Aperçu de l'Étiquette CLP</h2>
-                    <p>Remplissez le formulaire et cliquez sur "Générer l'Étiquette CLP"</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        function generateCLP() {
-            // Récupération des valeurs
-            const productName = document.getElementById('productName').value;
-            const netWeight = document.getElementById('netWeight').value;
-            const fragrancePercent = document.getElementById('fragrancePercent').value;
-            const supplierName = document.getElementById('supplierName').value;
-            const sdsRef = document.getElementById('sdsRef').value;
-            const mfgDate = document.getElementById('mfgDate').value;
-            const hPhrases = document.getElementById('hPhrases').value.split('\n').filter(p => p.trim());
-            const pPhrases = document.getElementById('pPhrases').value.split('\n').filter(p => p.trim());
-            const additionalInfo = document.getElementById('additionalInfo').value.split('\n').filter(p => p.trim());
-            
-            // Validation
-            if (!productName || !netWeight || !fragrancePercent || !supplierName) {
-                alert('⚠️ Veuillez remplir tous les champs obligatoires (*)');
-                return;
-            }
-            
-            // Affichage des pictogrammes
-            const pictoContainer = document.getElementById('pictograms');
-            pictoContainer.innerHTML = '';
-            const checkedPictos = document.querySelectorAll('.checkbox-group input[type="checkbox"]:checked');
-            checkedPictos.forEach(picto => {
-                const div = document.createElement('div');
-                div.className = 'pictogram';
-                div.innerHTML = `<span>${picto.dataset.symbol}</span>`;
-                pictoContainer.appendChild(div);
-            });
-            
-            // Remplissage de l'aperçu
-            document.getElementById('lblProductName').textContent = productName;
-            document.getElementById('lblNetWeight').textContent = netWeight;
-            document.getElementById('lblFragrancePercent').textContent = fragrancePercent;
-            document.getElementById('lblSupplier').textContent = supplierName;
-            document.getElementById('lblSDS').textContent = sdsRef || 'Non renseignée';
-            document.getElementById('lblDate').textContent = mfgDate ? new Date(mfgDate).toLocaleDateString('fr-FR') : new Date().toLocaleDateString('fr-FR');
-            
-            // Mentions de danger
-            const hList = document.getElementById('lblHPhrases');
-            hList.innerHTML = '';
-            hPhrases.forEach(h => {
-                const li = document.createElement('li');
-                li.textContent = h;
-                hList.appendChild(li);
-            });
-            
-            // Conseils de prudence
-            const pList = document.getElementById('lblPPhrases');
-            pList.innerHTML = '';
-            pPhrases.forEach(p => {
-                const li = document.createElement('li');
-                li.textContent = p;
-                pList.appendChild(li);
-            });
-            
-            // Informations complémentaires
-            const addList = document.getElementById('lblAdditional');
-            addList.innerHTML = '';
-            additionalInfo.forEach(info => {
-                const li = document.createElement('li');
-                li.textContent = info;
-                addList.appendChild(li);
-            });
-            
-            // Affichage de l'aperçu
-            document.getElementById('placeholder').style.display = 'none';
-            document.getElementById('labelPreview').style.display = 'block';
-            
-            // Scroll vers l'aperçu
-            document.getElementById('labelPreview').scrollIntoView({ behavior: 'smooth' });
-        }
-        
-        function printLabel() {
-            window.print();
-        }
-        
-        // Mettre la date d'aujourd'hui par défaut
-        document.getElementById('mfgDate').valueAsDate = new Date();
-    </script>
-</body>
-</html>
+        .header h1 { font-size: 2.8em; margin-bottom: 10px; font-family: 'Georgia', serif; }
+        .header p { font-size: 1.3em; opacity: 0.95; font-style: italic; }
+        .header .subtitle { font-size: 0.95
