@@ -27,8 +27,8 @@
             padding: 40px 30px;
             text-align: center;
         }
-        .header h1 { font-size: 2.8em; margin-bottom: 10px; font-family: 'Georgia', serif; }
-        .header p { font-size: 1.3em; opacity: 0.95; font-style: italic; }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; font-family: 'Georgia', serif; }
+        .header p { font-size: 1.2em; opacity: 0.95; font-style: italic; }
         
         .content {
             display: grid;
@@ -78,6 +78,41 @@
             border-color: #d81b60;
         }
         
+        .multi-info {
+            background: #c8e6c9;
+            border-left: 4px solid #43a047;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 12px;
+            color: #2e7d32;
+        }
+        
+        .selected-list {
+            background: white;
+            border: 2px solid #d81b60;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 15px;
+            min-height: 40px;
+        }
+        .selected-list:empty::before {
+            content: 'Aucun parfum sélectionné';
+            color: #999;
+            font-style: italic;
+        }
+        .selected-tag {
+            display: inline-block;
+            background: #d81b60;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            margin: 3px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .selected-tag:hover { background: #ad1457; }
+        
         .category-section {
             margin-bottom: 25px;
             background: white;
@@ -96,7 +131,7 @@
         
         .perfume-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
             gap: 8px;
         }
         .perfume-chip {
@@ -117,7 +152,6 @@
         .perfume-chip:hover { 
             transform: scale(1.05); 
             background: #f8bbd9;
-            border-color: #d81b60;
         }
         .perfume-chip.selected { 
             background: #d81b60; 
@@ -141,6 +175,7 @@
         .btn-primary { background: linear-gradient(135deg, #d81b60 0%, #ad1457 100%); color: white; }
         .btn-success { background: linear-gradient(135deg, #43a047 0%, #2e7d32 100%); color: white; }
         .btn-info { background: linear-gradient(135deg, #1976d2 0%, #0d47a1 100%); color: white; }
+        .btn-danger { background: linear-gradient(135deg, #e53935 0%, #c62828 100%); color: white; }
         
         .label-preview-container {
             background: white;
@@ -175,7 +210,7 @@
         
         .label-product-name {
             text-align: center;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: bold;
             color: #880e4f;
             margin: 10px 0;
@@ -195,7 +230,11 @@
             width: 60px;
             height: 60px;
         }
-        .ghs-pictogram svg { width: 100%; height: 100%; }
+        .ghs-pictogram img { 
+            width: 100%; 
+            height: 100%;
+            object-fit: contain;
+        }
         
         .label-section {
             margin: 8px 0;
@@ -264,7 +303,7 @@
         
         @media (max-width: 968px) {
             .content { grid-template-columns: 1fr; }
-            .perfume-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+            .perfume-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
         }
         
         @media print {
@@ -284,7 +323,17 @@
         
         <div class="content">
             <div class="form-section">
-                <h2>🌺 Sélection du Parfum</h2>
+                <h2>🌺 Sélection des Parfums</h2>
+                
+                <div class="multi-info">
+                    💡 <strong>Sélection multiple activée :</strong> Clique sur plusieurs parfums pour composer un mélange. Ex: Lilas + Patchouli + Ambre Gris
+                </div>
+                
+                <div class="form-group">
+                    <label>🌸 Parfums sélectionnés :</label>
+                    <div class="selected-list" id="selectedList"></div>
+                    <button class="btn btn-danger" onclick="clearSelection()" style="padding: 8px; font-size: 12px; margin-top: 5px;">️ Vider la sélection</button>
+                </div>
                 
                 <div class="form-group">
                     <label>🔍 Rechercher :</label>
@@ -317,7 +366,8 @@
                     
                     <div id="placeholder" class="placeholder">
                         <div class="icon">🌸</div>
-                        <h3>Sélectionne un parfum</h3>
+                        <h3>Sélectionne un ou plusieurs parfums</h3>
+                        <p style="margin-top: 10px; font-size: 12px;">Clique sur plusieurs parfums pour créer un mélange</p>
                     </div>
                     
                     <div id="labelPreview" style="display:none;">
@@ -339,21 +389,21 @@
                             </div>
                             
                             <div class="label-warning">
-                                <h4>🛡️ Conseils de Prudence</h4>
+                                <h4>️ Conseils de Prudence</h4>
                                 <ul id="lblPPhrases"></ul>
                             </div>
                             
                             <div class="label-section">
                                 <h4>🔬 Composition</h4>
-                                <p id="lblComposition"></p>
+                                <p>Mélange de parfums synthétiques et naturels</p>
                                 <p><strong>Allergènes:</strong> <span id="lblAllergens"></span></p>
-                                <p><strong>Teneur en parfum:</strong> <span id="lblFragrancePercent"></span>%</p>
+                                <p><strong>Teneur en parfum:</strong> <span id="lblFragrancePercent"></span>% dans cire végétale</p>
                             </div>
                             
                             <div class="label-section">
                                 <h4>📦 Informations Produit</h4>
                                 <p><strong>Poids net:</strong> <span id="lblNetWeight"></span> g</p>
-                                <p><strong>Fournisseur:</strong> <span id="lblSupplier"></span></p>
+                                <p><strong>Fournisseur:</strong> Le Petit Grassois</p>
                                 <p><strong>Réf. FDS:</strong> <span id="lblSDS"></span></p>
                                 <p><strong>Date:</strong> <span id="lblDate"></span></p>
                                 <p style="margin-top: 5px; font-size: 8.5px;"><strong>Usage:</strong> Fondant pour diffuseur à bougie chauffe-plat (sans mèche)</p>
@@ -371,13 +421,13 @@
                             </div>
                         </div>
                         
-                        <button class="btn btn-success" onclick="downloadPDF()">📥 Télécharger en PDF</button>
+                        <button class="btn btn-success" onclick="downloadPDF()"> Télécharger en PDF</button>
                         <button class="btn btn-info" onclick="printLabel()" style="margin-top: 10px;">🖨️ Imprimer</button>
                     </div>
                     
                     <div class="info-box" style="margin-top: 20px;">
-                        <h4>💡 Automatisation complète</h4>
-                        <p><strong>Toutes les données CLP sont pré-remplies automatiquement</strong> selon le parfum sélectionné.</p>
+                        <h4>💡 Sélection multiple</h4>
+                        <p><strong>Idéal pour identifier un parfum inconnu :</strong> Si tu connais les notes (ex: Lilas + Patchouli + Ambre), sélectionne-les toutes pour générer une étiquette combinée avec tous les allergènes et dangers.</p>
                     </div>
                 </div>
             </div>
@@ -385,14 +435,17 @@
     </div>
 
     <script>
-        // VRAIS PICTOGRAMMES GHS OFFICIELS
-        const ghsSymbols = {
-            'GHS07': '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,2 98,50 50,98 2,50" fill="white" stroke="#d32f2f" stroke-width="5"/><circle cx="50" cy="40" r="4" fill="black"/><line x1="50" y1="48" x2="50" y2="72" stroke="black" stroke-width="5" stroke-linecap="round"/></svg>',
-            'GHS09': '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,2 98,50 50,98 2,50" fill="white" stroke="#d32f2f" stroke-width="5"/><path d="M28 58 Q40 48 55 58 Q70 48 80 58" fill="none" stroke="black" stroke-width="3"/><path d="M22 65 Q35 58 50 65 Q65 58 75 65" fill="none" stroke="black" stroke-width="2.5"/><path d="M50 30 L50 52 M50 52 Q60 57 65 52 Q70 47 75 54" fill="none" stroke="black" stroke-width="3"/><circle cx="38" cy="75" r="6" fill="none" stroke="black" stroke-width="2.5"/><path d="M35 80 Q40 86 44 81" fill="none" stroke="black" stroke-width="2"/><line x1="65" y1="72" x2="73" y2="80" stroke="black" stroke-width="2.5"/><line x1="73" y1="72" x2="65" y2="80" stroke="black" stroke-width="2.5"/></svg>'
+        // IMAGES GHS OFFICIELLES depuis Wikimedia Commons (sources fiables)
+        const ghsImages = {
+            'GHS07': 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/GHS-pictogram-exclam.svg/200px-GHS-pictogram-exclam.svg.png',
+            'GHS09': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/GHS-pictogram-pollu.svg/200px-GHS-pictogram-pollu.svg.png',
+            'GHS02': 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/GHS-pictogram-flamme.svg/200px-GHS-pictogram-flamme.svg.png',
+            'GHS05': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/GHS-pictogram-corrosion.svg/200px-GHS-pictogram-corrosion.svg.png',
+            'GHS08': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/GHS-pictogram-silhouette.svg/200px-GHS-pictogram-silhouette.svg.png'
         };
 
         const perfumeDatabase = {
-            'Fraise et Menthe': { category: 'Fruits & Gourmands', allergens: ['Linalool', 'Limonene', 'Menthol compounds'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Fraise et Menthe': { category: 'Fruits & Gourmands', allergens: ['Linalool', 'Limonene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
             'Framboise caramel': { category: 'Fruits & Gourmands', allergens: ['Linalool', 'Coumarin', 'Vanillin'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
             'Fruits Rouges': { category: 'Fruits & Gourmands', allergens: ['Linalool', 'Limonene', 'Citronellol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
             'Ananas': { category: 'Fruits & Gourmands', allergens: ['Linalool', 'Limonene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
@@ -402,20 +455,31 @@
             'Coco': { category: 'Fruits & Gourmands', allergens: ['Linalool', 'Benzyl Salicylate', 'Eugenol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
             'Chocolat': { category: 'Fruits & Gourmands', allergens: ['Vanillin', 'Coumarin'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
             'Vanille': { category: 'Fruits & Gourmands', allergens: ['Vanillin', 'Linalool'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Vanille Bourbon': { category: 'Fruits & Gourmands', allergens: ['Vanillin', 'Linalool', 'Coumarin'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
             'Rose': { category: 'Fleurs', allergens: ['Citronellol', 'Geraniol', 'Linalool', 'Eugenol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
             'Rose d\'Amour': { category: 'Fleurs', allergens: ['Citronellol', 'Geraniol', 'Linalool'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
             'Jasmin': { category: 'Fleurs', allergens: ['Linalool', 'Benzyl Benzoate', 'Eugenol', 'Farnesol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
             'Lavande': { category: 'Fleurs', allergens: ['Linalool', 'Linalyl Acetate', 'Limonene', 'Geraniol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
             'Pivoine': { category: 'Fleurs', allergens: ['Linalool', 'Geraniol', 'Citronellol', 'Hexyl Cinnamal'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
             'Muguet': { category: 'Fleurs', allergens: ['Hydroxycitronellal', 'Hexyl Cinnamal', 'Linalool', 'Geraniol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Lilas': { category: 'Fleurs', allergens: ['Hydroxycitronellal', 'Linalool', 'Geraniol', 'Eugenol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Ylang-Ylang': { category: 'Fleurs', allergens: ['Linalool', 'Geraniol', 'Eugenol', 'Benzyl Benzoate', 'Farnesol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H319': 'Provoque une sévère irritation des yeux', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Tubéreuse': { category: 'Fleurs', allergens: ['Methyl Salicylate', 'Linalool', 'Eugenol', 'Benzyl Benzoate'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
             'Bois de Santal': { category: 'Bois & Nature', allergens: ['Santalol', 'Linalool'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
             'Patchouli': { category: 'Bois & Nature', allergens: ['Patchoulol', 'Linalool', 'Limonene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
             'Musc Blanc': { category: 'Bois & Nature', allergens: ['Galaxolide', 'Tonalide'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
             'Bigarade & Musc Blanc': { category: 'Bois & Nature', allergens: ['Limonene', 'Linalool', 'Galaxolide'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Bois de Gaïac': { category: 'Bois & Nature', allergens: ['Guaiol', 'Linalool'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Bois d\'Olivier': { category: 'Bois & Nature', allergens: ['Linalool', 'Limonene', 'Eugenol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Balade en Forêt': { category: 'Bois & Nature', allergens: ['Limonene', 'Linalool', 'Pinene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
             'Ambre': { category: 'Oriental & Cocooning', allergens: ['Linalool', 'Limonene', 'Citronellol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Ambre Gris': { category: 'Oriental & Cocooning', allergens: ['Ambroxan', 'Linalool'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Ambre Doré': { category: 'Oriental & Cocooning', allergens: ['Linalool', 'Limonene', 'Coumarin'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
             'Fève Tonka': { category: 'Oriental & Cocooning', allergens: ['Coumarin', 'Vanillin'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Encens': { category: 'Oriental & Cocooning', allergens: ['Limonene', 'Linalool'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
             'Attrape Rêve': { category: 'Oriental & Cocooning', allergens: ['Linalool', 'Benzyl Salicylate', 'Coumarin'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Balade en Forêt': { category: 'Bois & Nature', allergens: ['Limonene', 'Linalool', 'Pinene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] }
+            'Azalée du Japon': { category: 'Fleurs', allergens: ['Linalool', 'Geraniol', 'Citronellol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
+            'Balade Provençale': { category: 'Oriental & Cocooning', allergens: ['Linalool', 'Limonene', 'Lavandulol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] }
         };
 
         const pPhrases = {
@@ -427,7 +491,7 @@
             'P501': 'Éliminer le contenu/récipient conformément à la réglementation'
         };
 
-        let selectedPerfume = null;
+        let selectedPerfumes = [];
 
         function renderPerfumeCategories() {
             const container = document.getElementById('perfumeCategories');
@@ -449,9 +513,9 @@
                     section.className = 'category-section';
                     section.innerHTML = `
                         <div class="category-title">${icon} ${category}</div>
-                        <div class="perfume-grid" data-category="${category}">
+                        <div class="perfume-grid">
                             ${perfumes.map(name => `
-                                <div class="perfume-chip" onclick="selectPerfume('${name}')" data-name="${name}">
+                                <div class="perfume-chip" onclick="togglePerfume('${name}')" data-name="${name}">
                                     ${name}
                                 </div>
                             `).join('')}
@@ -462,6 +526,37 @@
             });
         }
 
+        function togglePerfume(name) {
+            const chip = document.querySelector(`[data-name="${name}"]`);
+            const index = selectedPerfumes.indexOf(name);
+            
+            if (index === -1) {
+                selectedPerfumes.push(name);
+                chip.classList.add('selected');
+            } else {
+                selectedPerfumes.splice(index, 1);
+                chip.classList.remove('selected');
+            }
+            
+            updateSelectedList();
+        }
+
+        function updateSelectedList() {
+            const list = document.getElementById('selectedList');
+            list.innerHTML = selectedPerfumes.map(name => 
+                `<span class="selected-tag" onclick="togglePerfume('${name}')">${name} ✕</span>`
+            ).join('');
+        }
+
+        function clearSelection() {
+            selectedPerfumes.forEach(name => {
+                const chip = document.querySelector(`[data-name="${name}"]`);
+                if (chip) chip.classList.remove('selected');
+            });
+            selectedPerfumes = [];
+            updateSelectedList();
+        }
+
         function filterPerfumes() {
             const query = document.getElementById('perfumeSearch').value.toLowerCase();
             document.querySelectorAll('.perfume-chip').forEach(chip => {
@@ -470,16 +565,9 @@
             });
         }
 
-        function selectPerfume(name) {
-            document.querySelectorAll('.perfume-chip').forEach(c => c.classList.remove('selected'));
-            document.querySelector(`[data-name="${name}"]`)?.classList.add('selected');
-            selectedPerfume = { name, ...perfumeDatabase[name] };
-            generateCLP();
-        }
-
         function generateCLP() {
-            if (!selectedPerfume) {
-                alert('⚠️ Veuillez sélectionner un parfum');
+            if (selectedPerfumes.length === 0) {
+                alert('⚠️ Veuillez sélectionner au moins un parfum');
                 return;
             }
 
@@ -487,23 +575,47 @@
             const fragrancePercent = document.getElementById('fragrancePercent').value;
             const mfgDate = document.getElementById('mfgDate').value;
 
+            // Combiner les données de tous les parfums sélectionnés
+            const allAllergens = new Set();
+            const allHPhrases = {};
+            const allPictograms = new Set();
+
+            selectedPerfumes.forEach(name => {
+                const data = perfumeDatabase[name];
+                data.allergens.forEach(a => allAllergens.add(a));
+                Object.entries(data.hPhrases).forEach(([code, text]) => {
+                    allHPhrases[code] = text;
+                });
+                data.pictograms.forEach(p => allPictograms.add(p));
+            });
+
+            // Afficher le nom (mélange ou parfum unique)
+            const productName = selectedPerfumes.length === 1 
+                ? selectedPerfumes[0] 
+                : 'Mélange: ' + selectedPerfumes.join(' + ');
+
+            document.getElementById('lblProductName').textContent = productName;
+
+            // Pictogrammes avec images officielles
             const pictoContainer = document.getElementById('pictograms');
             pictoContainer.innerHTML = '';
-            selectedPerfume.pictograms.forEach(code => {
+            allPictograms.forEach(code => {
                 const div = document.createElement('div');
                 div.className = 'ghs-pictogram';
-                div.innerHTML = ghsSymbols[code] || '';
+                div.innerHTML = `<img src="${ghsImages[code]}" alt="${code}" onerror="this.style.display='none'">`;
                 pictoContainer.appendChild(div);
             });
 
+            // Mentions H
             const hList = document.getElementById('lblHPhrases');
             hList.innerHTML = '';
-            Object.entries(selectedPerfume.hPhrases).forEach(([code, text]) => {
+            Object.entries(allHPhrases).forEach(([code, text]) => {
                 const li = document.createElement('li');
                 li.textContent = `${code} - ${text}`;
                 hList.appendChild(li);
             });
 
+            // Phrases P
             const pList = document.getElementById('lblPPhrases');
             pList.innerHTML = '';
             ['P261', 'P272', 'P280', 'P302+P352', 'P333+P313', 'P501'].forEach(code => {
@@ -512,14 +624,12 @@
                 pList.appendChild(li);
             });
 
-            document.getElementById('lblProductName').textContent = selectedPerfume.name;
+            // Remplissage
             document.getElementById('lblNetWeight').textContent = netWeight;
             document.getElementById('lblFragrancePercent').textContent = fragrancePercent;
-            document.getElementById('lblSupplier').textContent = 'Le Petit Grassois';
-            document.getElementById('lblSDS').textContent = `FDS-PG-${selectedPerfume.name.toUpperCase().replace(/[^A-Z0-9]/g, '-')}-2024`;
+            document.getElementById('lblSDS').textContent = `FDS-PG-MULTI-${Date.now()}-2024`;
             document.getElementById('lblDate').textContent = mfgDate ? new Date(mfgDate).toLocaleDateString('fr-FR') : new Date().toLocaleDateString('fr-FR');
-            document.getElementById('lblComposition').textContent = 'Mélange de parfums synthétiques et naturels';
-            document.getElementById('lblAllergens').textContent = selectedPerfume.allergens.join(', ');
+            document.getElementById('lblAllergens').textContent = Array.from(allAllergens).join(', ');
             document.getElementById('lblAdditional').innerHTML = '<li>Tenir hors de portée des enfants</li><li>Ne pas ingérer</li><li>Utiliser sur un support adapté</li>';
 
             document.getElementById('placeholder').style.display = 'none';
@@ -529,7 +639,7 @@
 
         function downloadPDF() {
             const element = document.getElementById('printableLabel');
-            const name = selectedPerfume.name.replace(/[^a-zA-Z0-9]/g, '_');
+            const name = selectedPerfumes.join('-').replace(/[^a-zA-Z0-9]/g, '_');
             html2pdf().set({
                 margin: 10,
                 filename: `CLP_${name}_${Date.now()}.pdf`,
