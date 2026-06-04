@@ -46,4 +46,679 @@
         }
         .header h1 { font-size: 2.8em; margin-bottom: 10px; font-family: 'Georgia', serif; }
         .header p { font-size: 1.3em; opacity: 0.95; font-style: italic; }
-        .header .subtitle { font-size: 0.95
+        .header .subtitle { font-size: 0.95em; margin-top: 8px; opacity: 0.85; }
+        
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+        
+        .form-section {
+            background: linear-gradient(135deg, #fff5f7 0%, #fce4ec 100%);
+            padding: 25px;
+            border-radius: 15px;
+            border: 2px solid #f8bbd9;
+        }
+        .form-section h2 {
+            color: #ad1457;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #d81b60;
+            font-family: 'Georgia', serif;
+        }
+        
+        .form-group { margin-bottom: 18px; }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #880e4f;
+            font-size: 14px;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #f8bbd9;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #d81b60;
+            box-shadow: 0 0 0 3px rgba(216, 27, 96, 0.1);
+        }
+        .form-group textarea { resize: vertical; min-height: 100px; font-family: monospace; }
+        
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            border: 2px solid transparent;
+        }
+        .checkbox-item:hover { transform: translateX(5px); border-color: #f8bbd9; }
+        .checkbox-item input { margin-right: 12px; }
+        
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .btn-primary { background: linear-gradient(135deg, #d81b60 0%, #ad1457 100%); color: white; }
+        .btn-success { background: linear-gradient(135deg, #43a047 0%, #2e7d32 100%); color: white; }
+        .btn-info { background: linear-gradient(135deg, #1976d2 0%, #0d47a1 100%); color: white; }
+        
+        .label-preview-container {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid #e1bee7;
+        }
+        
+        /* Format étiquette réel - environ 10cm x 7cm */
+        .clp-label {
+            width: 100%;
+            max-width: 380px;
+            margin: 0 auto;
+            background: white;
+            border: 2px solid #333;
+            padding: 12px;
+            font-family: Arial, sans-serif;
+            font-size: 9px;
+            line-height: 1.4;
+        }
+        
+        .label-header-clp {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1.5px solid #333;
+            padding-bottom: 6px;
+            margin-bottom: 8px;
+        }
+        .label-brand { font-size: 11px; font-weight: bold; color: #ad1457; }
+        .label-brand-sub { font-size: 8px; color: #666; font-style: italic; }
+        .label-clp-title { font-size: 10px; font-weight: bold; text-align: right; }
+        
+        .label-product-name {
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            color: #880e4f;
+            margin: 8px 0;
+            padding: 5px;
+            background: #fce4ec;
+            border-radius: 4px;
+        }
+        
+        .pictograms-container {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 8px 0;
+            flex-wrap: wrap;
+        }
+        .ghs-pictogram {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #d32f2f;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(45deg);
+            padding: 4px;
+        }
+        .ghs-pictogram svg {
+            transform: rotate(-45deg);
+            width: 35px;
+            height: 35px;
+        }
+        
+        .label-section {
+            margin: 6px 0;
+            padding: 5px;
+            background: #fafafa;
+            border-left: 3px solid #d81b60;
+        }
+        .label-section h4 {
+            font-size: 9px;
+            color: #ad1457;
+            text-transform: uppercase;
+            margin-bottom: 3px;
+        }
+        .label-section p, .label-section ul {
+            font-size: 8.5px;
+            color: #333;
+            line-height: 1.5;
+        }
+        .label-section ul { padding-left: 12px; margin: 2px 0; }
+        .label-section li { margin-bottom: 1px; }
+        
+        .label-warning {
+            background: #fff3e0;
+            border: 1px solid #ff9800;
+            border-radius: 4px;
+            padding: 5px;
+            margin: 6px 0;
+        }
+        .label-warning h4 { color: #e65100; font-size: 9px; }
+        .label-warning ul { font-size: 8px; }
+        
+        .label-footer {
+            border-top: 1.5px solid #333;
+            margin-top: 8px;
+            padding-top: 5px;
+            text-align: center;
+            font-size: 7.5px;
+            color: #666;
+        }
+        .label-footer .regulation { font-weight: bold; color: #333; }
+        
+        .info-panel {
+            background: #e3f2fd;
+            border-left: 4px solid #1976d2;
+            padding: 12px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-size: 12px;
+        }
+        .info-panel h4 { color: #0d47a1; margin-bottom: 5px; }
+        
+        .perfume-library {
+            background: #f3e5f5;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .perfume-library h3 {
+            color: #6a1b9a;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        .perfume-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 6px;
+        }
+        .perfume-chip {
+            padding: 8px;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 11px;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+        .perfume-chip:hover { transform: scale(1.05); border-color: #ad1457; }
+        .perfume-chip.selected { background: #fce4ec; border-color: #d81b60; font-weight: bold; }
+        
+        .placeholder-preview {
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+            border: 3px dashed #bdbdbd;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            color: #757575;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .placeholder-preview .icon { font-size: 4em; margin-bottom: 15px; }
+        
+        @media (max-width: 968px) {
+            .content { grid-template-columns: 1fr; }
+            .header::before, .header::after { display: none; }
+        }
+        
+        @media print {
+            body * { visibility: hidden; }
+            .clp-label, .clp-label * { visibility: visible; }
+            .clp-label { position: absolute; left: 20px; top: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌸 Générateur CLP</h1>
+            <p>L'Instant Fondant by Céline</p>
+            <div class="subtitle">Fondants en cire végétale parfumée - Créations florales</div>
+        </div>
+        
+        <div class="content">
+            <div class="form-section">
+                <h2>🌹 Bibliothèque de Parfums Floraux</h2>
+                <div class="perfume-library">
+                    <h3>Clique sur un parfum pour pré-remplir :</h3>
+                    <div class="perfume-grid" id="perfumeGrid"></div>
+                </div>
+                
+                <h2>📝 Informations du Produit</h2>
+                
+                <div class="form-group">
+                    <label>🌸 Nom de la création florale *</label>
+                    <input type="text" id="productName" placeholder="Ex: Rose de Mai, Jasmin d'Orient...">
+                </div>
+                
+                <div class="form-group">
+                    <label>⚖️ Poids net (g) *</label>
+                    <input type="number" id="netWeight" value="80" placeholder="Ex: 80">
+                </div>
+                
+                <div class="form-group">
+                    <label>🌺 Teneur en parfum (%) *</label>
+                    <input type="number" id="fragrancePercent" value="8" min="7" max="10" step="0.5">
+                </div>
+                
+                <div class="form-group">
+                    <label>🏭 Fournisseur du parfum *</label>
+                    <input type="text" id="supplierName" placeholder="Ex: Essence & Co.">
+                </div>
+                
+                <div class="form-group">
+                    <label>📋 Référence FDS</label>
+                    <input type="text" id="sdsRef" placeholder="Ex: FDS-2024-001">
+                </div>
+                
+                <div class="form-group">
+                    <label>📅 Date de fabrication</label>
+                    <input type="date" id="mfgDate">
+                </div>
+                
+                <h2 style="margin-top: 25px;">⚠️ Pictogrammes de Danger GHS</h2>
+                <div class="checkbox-group">
+                    <label class="checkbox-item">
+                        <input type="checkbox" value="GHS07">
+                        <span>⚠️ GHS07 - Point d'exclamation (irritant/sensibilisant)</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" value="GHS08">
+                        <span>🫁 GHS08 - Danger pour la santé (sensibilisation respiratoire)</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" value="GHS09">
+                        <span> GHS09 - Danger pour le milieu aquatique</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" value="GHS05">
+                        <span>🧪 GHS05 - Corrosion</span>
+                    </label>
+                </div>
+                
+                <div class="form-group" style="margin-top: 15px;">
+                    <label>️ Mentions de Danger (phrases H) - une par ligne</label>
+                    <textarea id="hPhrases" placeholder="H317 - Peut provoquer une allergie cutanée&#10;H411 - Toxique pour les organismes aquatiques"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>🛡️ Conseils de Prudence (phrases P) - une par ligne</label>
+                    <textarea id="pPhrases" placeholder="P261 - Éviter de respirer les poussières/fumées&#10;P272 - Ne pas rejeter dans l'environnement&#10;P280 - Porter des gants de protection&#10;P302+P352 - EN CAS DE CONTACT AVEC LA PEAU: laver à grande eau&#10;P333+P313 - En cas d'irritation: consulter un médecin"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>📝 Composition - Allergènes (si applicable)</label>
+                    <textarea id="allergens" placeholder="Ex: Contient: Linalool, Limonene, Geraniol, Citronellol"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>ℹ️ Informations complémentaires</label>
+                    <textarea id="additionalInfo" placeholder="Ex: Tenir hors de portée des enfants&#10;Ne pas ingérer">Tenir hors de portée des enfants.
+Ne pas ingérer.
+Utiliser sur un support adapté.</textarea>
+                </div>
+                
+                <button class="btn btn-primary" onclick="generateCLP()"> Générer l'Étiquette CLP</button>
+            </div>
+            
+            <div>
+                <div class="label-preview-container">
+                    <h2 style="color: #ad1457; text-align: center; margin-bottom: 15px; font-family: Georgia, serif;">📋 Aperçu de l'Étiquette</h2>
+                    
+                    <div id="placeholder" class="placeholder-preview">
+                        <div class="icon">🌸</div>
+                        <h3>Prêt à générer</h3>
+                        <p>Remplis le formulaire et clique sur "Générer"</p>
+                        <p style="margin-top: 10px; font-size: 11px;">L'étiquette s'affichera ici au format imprimable</p>
+                    </div>
+                    
+                    <div id="labelPreview" style="display:none;">
+                        <div class="clp-label" id="printableLabel">
+                            <div class="label-header-clp">
+                                <div>
+                                    <div class="label-brand">L'Instant Fondant by Céline</div>
+                                    <div class="label-brand-sub">Fondant en cire végétale parfumée</div>
+                                </div>
+                                <div class="label-clp-title">CLP<br>Classification<br>Étiquetage<br>Emballage</div>
+                            </div>
+                            
+                            <div class="label-product-name" id="lblProductName"></div>
+                            
+                            <div class="pictograms-container" id="pictograms"></div>
+                            
+                            <div class="label-section">
+                                <h4>⚠️ Mentions de Danger</h4>
+                                <ul id="lblHPhrases"></ul>
+                            </div>
+                            
+                            <div class="label-warning">
+                                <h4>🛡️ Conseils de Prudence</h4>
+                                <ul id="lblPPhrases"></ul>
+                            </div>
+                            
+                            <div class="label-section">
+                                <h4>🔬 Composition</h4>
+                                <p id="lblAllergens"></p>
+                                <p style="margin-top: 3px;"><strong>Teneur en parfum:</strong> <span id="lblFragrancePercent"></span>% (cire végétale naturelle)</p>
+                            </div>
+                            
+                            <div class="label-section">
+                                <h4>📦 Informations Produit</h4>
+                                <p><strong>Poids net:</strong> <span id="lblNetWeight"></span> g</p>
+                                <p><strong>Fournisseur parfum:</strong> <span id="lblSupplier"></span></p>
+                                <p><strong>Réf. FDS:</strong> <span id="lblSDS"></span></p>
+                                <p><strong>Date:</strong> <span id="lblDate"></span></p>
+                            </div>
+                            
+                            <div class="label-section">
+                                <h4>ℹ️ Informations Complémentaires</h4>
+                                <ul id="lblAdditional"></ul>
+                            </div>
+                            
+                            <div class="label-footer">
+                                <p class="regulation">Conforme au Règlement (CE) n°1272/2008 (CLP)</p>
+                                <p>UFI non requis - Concentration parfum &lt; 10%</p>
+                                <p>Fabriqué en France 🇷</p>
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-success" onclick="downloadPDF()">📥 Télécharger en PDF</button>
+                        <button class="btn btn-info" onclick="printLabel()">🖨️ Imprimer</button>
+                    </div>
+                    
+                    <div class="info-panel" style="margin-top: 20px;">
+                        <h4>💡 Info réglementaire</h4>
+                        <p><strong>UFI non requis :</strong> Les mélanges contenant des substances dangereuses à une concentration ≤ 10% ne nécessitent pas d'UFI (Code de Formulation Unique).</p>
+                        <p style="margin-top: 5px;"><strong>Allergènes :</strong> Si le parfum contient des allergènes (linalool, limonene, etc.) à plus de 0,1%, ils doivent être mentionnés.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // SVG officiels pour les pictogrammes GHS
+        const ghsSymbols = {
+            'GHS07': `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <path d="M50 10 L55 40 L85 40 L60 58 L70 90 L50 70 L30 90 L40 58 L15 40 L45 40 Z" fill="none" stroke="black" stroke-width="3"/>
+                <circle cx="50" cy="52" r="6" fill="black"/>
+                <line x1="50" y1="60" x2="50" y2="80" stroke="black" stroke-width="4" stroke-linecap="round"/>
+            </svg>`,
+            'GHS08': `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="25" r="10" fill="none" stroke="black" stroke-width="3"/>
+                <path d="M35 40 L35 60 L25 80 M65 40 L65 60 L75 80 M50 40 L50 70 M40 50 Q50 45 60 50" fill="none" stroke="black" stroke-width="3"/>
+                <path d="M25 75 L75 75" stroke="black" stroke-width="3"/>
+                <path d="M30 85 Q50 80 70 85" fill="none" stroke="black" stroke-width="3"/>
+            </svg>`,
+            'GHS09': `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15 50 Q25 40 40 45 Q50 35 60 40 Q75 30 85 45" fill="none" stroke="black" stroke-width="3"/>
+                <path d="M50 20 L50 60" stroke="black" stroke-width="3"/>
+                <path d="M50 60 Q60 65 65 60 Q70 55 75 60" fill="none" stroke="black" stroke-width="3"/>
+                <circle cx="30" cy="70" r="8" fill="none" stroke="black" stroke-width="3"/>
+                <path d="M25 75 Q30 85 40 80" fill="none" stroke="black" stroke-width="3"/>
+                <path d="M70 75 L80 85 M80 75 L70 85" stroke="black" stroke-width="3"/>
+            </svg>`,
+            'GHS05': `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <path d="M30 20 L70 20 L75 50 L65 80 L35 80 L25 50 Z" fill="none" stroke="black" stroke-width="3"/>
+                <path d="M20 85 L80 85" stroke="black" stroke-width="3"/>
+                <path d="M15 90 L85 90" stroke="black" stroke-width="3"/>
+                <line x1="35" y1="40" x2="50" y2="40" stroke="black" stroke-width="3"/>
+                <line x1="42" y1="35" x2="42" y2="45" stroke="black" stroke-width="3"/>
+            </svg>`
+        };
+        
+        // Bibliothèque de parfums floraux avec leurs FDS typiques
+        const perfumeLibrary = {
+            'Rose de Mai': {
+                supplier: 'Maison du Parfum',
+                sdsRef: 'FDS-ROSE-2024',
+                hPhrases: 'H317 - Peut provoquer une allergie cutanée\nH411 - Toxique pour les organismes aquatiques avec effets néfastes à long terme',
+                pPhrases: 'P261 - Éviter de respirer les poussières/fumées/gaz\nP272 - Ne pas rejeter dans l\'environnement\nP280 - Porter des gants de protection\nP302+P352 - EN CAS DE CONTACT AVEC LA PEAU: laver abondamment à l\'eau\nP333+P313 - En cas d\'irritation ou d\'éruption cutanée: consulter un médecin\nP391 - Recueillir le produit répandu\nP501 - Éliminer le contenu/récipient conformément à la réglementation',
+                allergens: 'Contient: Citronellol, Geraniol, Linalool, Eugenol',
+                pictograms: ['GHS07', 'GHS09']
+            },
+            'Jasmin': {
+                supplier: 'Fragrance Pro',
+                sdsRef: 'FDS-JASMIN-2024',
+                hPhrases: 'H317 - Peut provoquer une allergie cutanée\nH411 - Toxique pour les organismes aquatiques avec effets néfastes à long terme',
+                pPhrases: 'P261 - Éviter de respirer les poussières/fumées/gaz\nP272 - Ne pas rejeter dans l\'environnement\nP280 - Porter des gants de protection\nP302+P352 - EN CAS DE CONTACT AVEC LA PEAU: laver abondamment à l\'eau\nP333+P313 - En cas d\'irritation: consulter un médecin\nP501 - Éliminer le contenu/récipient selon réglementation',
+                allergens: 'Contient: Linalool, Benzyl Benzoate, Eugenol, Farnesol',
+                pictograms: ['GHS07', 'GHS09']
+            },
+            'Ylang-Ylang': {
+                supplier: 'Arômes Naturels',
+                sdsRef: 'FDS-YLANG-2024',
+                hPhrases: 'H317 - Peut provoquer une allergie cutanée\nH319 - Provoque une sévère irritation des yeux\nH411 - Toxique pour les organismes aquatiques',
+                pPhrases: 'P264 - Se laver soigneusement les mains après manipulation\nP272 - Ne pas rejeter dans l\'environnement\nP280 - Porter des gants/lunettes de protection\nP302+P352 - EN CAS DE CONTACT AVEC LA PEAU: laver à grande eau\nP305+P351+P338 - EN CAS DE CONTACT AVEC LES YEUX: rincer à l\'eau\nP333+P313 - En cas d\'irritation: consulter un médecin',
+                allergens: 'Contient: Linalool, Geraniol, Eugenol, Benzyl Benzoate, Farnesol',
+                pictograms: ['GHS07', 'GHS09']
+            },
+            'Lavande': {
+                supplier: 'Provence Parfums',
+                sdsRef: 'FDS-LAVANDE-2024',
+                hPhrases: 'H317 - Peut provoquer une allergie cutanée\nH411 - Toxique pour les organismes aquatiques',
+                pPhrases: 'P261 - Éviter de respirer les poussières\nP272 - Ne pas rejeter dans l\'environnement\nP280 - Porter des gants\nP302+P352 - EN CAS DE CONTACT: laver à l\'eau\nP333+P313 - En cas d\'irritation: consulter\nP501 - Éliminer selon réglementation',
+                allergens: 'Contient: Linalool, Linalyl Acetate, Limonene, Geraniol',
+                pictograms: ['GHS07', 'GHS09']
+            },
+            'Fleur d\'Oranger': {
+                supplier: 'Essences du Sud',
+                sdsRef: 'FDS-NEROLI-2024',
+                hPhrases: 'H317 - Peut provoquer une allergie cutanée\nH411 - Toxique pour les organismes aquatiques',
+                pPhrases: 'P261 - Éviter de respirer\nP272 - Ne pas rejeter dans l\'environnement\nP280 - Porter des gants\nP302+P352 - Laver à l\'eau en cas de contact\nP333+P313 - En cas d\'irritation: consulter\nP501 - Éliminer selon réglementation',
+                allergens: 'Contient: Linalool, Limonene, Geraniol, Citral, Eugenol',
+                pictograms: ['GHS07', 'GHS09']
+            },
+            'Tubéreuse': {
+                supplier: 'Fleurs de Nuit',
+                sdsRef: 'FDS-TUBEREUSE-2024',
+                hPhrases: 'H317 - Peut provoquer une allergie cutanée\nH411 - Toxique pour les organismes aquatiques',
+                pPhrases: 'P261 - Éviter de respirer\nP272 - Ne pas rejeter dans l\'environnement\nP280 - Porter des gants\nP302+P352 - Laver à l\'eau\nP333+P313 - En cas d\'irritation: consulter\nP501 - Éliminer selon réglementation',
+                allergens: 'Contient: Methyl Salicylate, Linalool, Eugenol, Benzyl Benzoate',
+                pictograms: ['GHS07', 'GHS09']
+            },
+            'Violette': {
+                supplier: 'Parfums Rares',
+                sdsRef: 'FDS-VIOLETTE-2024',
+                hPhrases: 'H317 - Peut provoquer une allergie cutanée\nH411 - Toxique pour les organismes aquatiques',
+                pPhrases: 'P261 - Éviter de respirer\nP272 - Ne pas rejeter dans l\'environnement\nP280 - Porter des gants\nP302+P352 - Laver à l\'eau\nP333+P313 - En cas d\'irritation: consulter\nP501 - Éliminer selon réglementation',
+                allergens: 'Contient: Ionones (Alpha, Beta), Linalool',
+                pictograms: ['GHS07', 'GHS09']
+            },
+            'Lilas': {
+                supplier: 'Jardin des Parfums',
+                sdsRef: 'FDS-LILAS-2024',
+                hPhrases: 'H317 - Peut provoquer une allergie cutanée\nH411 - Toxique pour les organismes aquatiques',
+                pPhrases: 'P261 - Éviter de respirer\nP272 - Ne pas rejeter dans l\'environnement\nP280 - Porter des gants\nP302+P352 - Laver à l\'eau\nP333+P313 - En cas d\'irritation: consulter\nP501 - Éliminer selon réglementation',
+                allergens: 'Contient: Hydroxycitronellal, Linalool, Geraniol, Eugenol',
+                pictograms: ['GHS07', 'GHS09']
+            },
+            'Muguet': {
+                supplier: 'Printemps Parfumé',
+                sdsRef: 'FDS-MUGUET-2024',
+                hPhrases: 'H317 - Peut provoquer une allergie cutanée\nH411 - Toxique pour les organismes aquatiques',
+                pPhrases: 'P261 - Éviter de respirer\nP272 - Ne pas rejeter dans l\'environnement\nP280 - Porter des gants\nP302+P352 - Laver à l\'eau\nP333+P313 - En cas d\'irritation: consulter\nP501 - Éliminer selon réglementation',
+                allergens: 'Contient: Hydroxycitronellal, Hexyl Cinnamal, Linalool, Geraniol',
+                pictograms: ['GHS07', 'GHS09']
+            },
+            'Pivoine': {
+                supplier: 'Fleurs de Soie',
+                sdsRef: 'FDS-PIVOINE-2024',
+                hPhrases: 'H317 - Peut provoquer une allergie cutanée\nH411 - Toxique pour les organismes aquatiques',
+                pPhrases: 'P261 - Éviter de respirer\nP272 - Ne pas rejeter dans l\'environnement\nP280 - Porter des gants\nP302+P352 - Laver à l\'eau\nP333+P313 - En cas d\'irritation: consulter\nP501 - Éliminer selon réglementation',
+                allergens: 'Contient: Linalool, Geraniol, Citronellol, Hexyl Cinnamal',
+                pictograms: ['GHS07', 'GHS09']
+            },
+            'Magnolia': {
+                supplier: 'Bois Fleuris',
+                sdsRef: 'FDS-MAGNOLIA-2024',
+                hPhrases: 'H317 - Peut provoquer une allergie cutanée\nH411 - Toxique pour les organismes aquatiques',
+                pPhrases: 'P261 - Éviter de respirer\nP272 - Ne pas rejeter dans l\'environnement\nP280 - Porter des gants\nP302+P352 - Laver à l\'eau\nP333+P313 - En cas d\'irritation: consulter\nP501 - Éliminer selon réglementation',
+                allergens: 'Contient: Linalool, Eugenol, Isoeugenol, Benzyl Salicylate',
+                pictograms: ['GHS07', 'GHS09']
+            },
+            'Gardénia': {
+                supplier: 'Fleurs Blanches',
+                sdsRef: 'FDS-GARDENIA-2024',
+                hPhrases: 'H317 - Peut provoquer une allergie cutanée\nH411 - Toxique pour les organismes aquatiques',
+                pPhrases: 'P261 - Éviter de respirer\nP272 - Ne pas rejeter dans l\'environnement\nP280 - Porter des gants\nP302+P352 - Laver à l\'eau\nP333+P313 - En cas d\'irritation: consulter\nP501 - Éliminer selon réglementation',
+                allergens: 'Contient: Benzyl Salicylate, Linalool, Eugenol, Farnesol',
+                pictograms: ['GHS07', 'GHS09']
+            }
+        };
+        
+        // Initialisation de la bibliothèque de parfums
+        function initPerfumeLibrary() {
+            const grid = document.getElementById('perfumeGrid');
+            Object.keys(perfumeLibrary).forEach(name => {
+                const chip = document.createElement('div');
+                chip.className = 'perfume-chip';
+                chip.textContent = '🌸 ' + name;
+                chip.onclick = () => selectPerfume(name, chip);
+                grid.appendChild(chip);
+            });
+        }
+        
+        function selectPerfume(name, element) {
+            // Désélectionner tous
+            document.querySelectorAll('.perfume-chip').forEach(c => c.classList.remove('selected'));
+            element.classList.add('selected');
+            
+            // Remplir les champs
+            const data = perfumeLibrary[name];
+            document.getElementById('productName').value = name;
+            document.getElementById('supplierName').value = data.supplier;
+            document.getElementById('sdsRef').value = data.sdsRef;
+            document.getElementById('hPhrases').value = data.hPhrases;
+            document.getElementById('pPhrases').value = data.pPhrases;
+            document.getElementById('allergens').value = data.allergens;
+            
+            // Cocher les pictogrammes
+            document.querySelectorAll('.checkbox-group input').forEach(cb => cb.checked = false);
+            data.pictograms.forEach(p => {
+                const cb = document.querySelector(`.checkbox-group input[value="${p}"]`);
+                if (cb) cb.checked = true;
+            });
+        }
+        
+        function generateCLP() {
+            const productName = document.getElementById('productName').value.trim();
+            const netWeight = document.getElementById('netWeight').value;
+            const fragrancePercent = document.getElementById('fragrancePercent').value;
+            const supplierName = document.getElementById('supplierName').value.trim();
+            const sdsRef = document.getElementById('sdsRef').value;
+            const mfgDate = document.getElementById('mfgDate').value;
+            const hPhrases = document.getElementById('hPhrases').value.split('\n').filter(p => p.trim());
+            const pPhrases = document.getElementById('pPhrases').value.split('\n').filter(p => p.trim());
+            const allergens = document.getElementById('allergens').value;
+            const additionalInfo = document.getElementById('additionalInfo').value.split('\n').filter(p => p.trim());
+            
+            if (!productName || !netWeight || !fragrancePercent || !supplierName) {
+                alert('⚠️ Veuillez remplir tous les champs obligatoires');
+                return;
+            }
+            
+            // Pictogrammes
+            const pictoContainer = document.getElementById('pictograms');
+            pictoContainer.innerHTML = '';
+            const checkedPictos = document.querySelectorAll('.checkbox-group input[type="checkbox"]:checked');
+            checkedPictos.forEach(picto => {
+                const div = document.createElement('div');
+                div.className = 'ghs-pictogram';
+                div.innerHTML = ghsSymbols[picto.value] || '';
+                pictoContainer.appendChild(div);
+            });
+            
+            // Remplissage
+            document.getElementById('lblProductName').textContent = productName;
+            document.getElementById('lblNetWeight').textContent = netWeight;
+            document.getElementById('lblFragrancePercent').textContent = fragrancePercent;
+            document.getElementById('lblSupplier').textContent = supplierName;
+            document.getElementById('lblSDS').textContent = sdsRef || 'Non renseignée';
+            document.getElementById('lblDate').textContent = mfgDate ? new Date(mfgDate).toLocaleDateString('fr-FR') : new Date().toLocaleDateString('fr-FR');
+            document.getElementById('lblAllergens').textContent = allergens || 'Ne contient pas d\'allergènes déclarés';
+            
+            const hList = document.getElementById('lblHPhrases');
+            hList.innerHTML = '';
+            hPhrases.forEach(h => {
+                const li = document.createElement('li');
+                li.textContent = h;
+                hList.appendChild(li);
+            });
+            
+            const pList = document.getElementById('lblPPhrases');
+            pList.innerHTML = '';
+            pPhrases.forEach(p => {
+                const li = document.createElement('li');
+                li.textContent = p;
+                pList.appendChild(li);
+            });
+            
+            const addList = document.getElementById('lblAdditional');
+            addList.innerHTML = '';
+            additionalInfo.forEach(info => {
+                const li = document.createElement('li');
+                li.textContent = info;
+                addList.appendChild(li);
+            });
+            
+            document.getElementById('placeholder').style.display = 'none';
+            document.getElementById('labelPreview').style.display = 'block';
+            document.getElementById('labelPreview').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function downloadPDF() {
+            const element = document.getElementById('printableLabel');
+            const opt = {
+                margin: 10,
+                filename: `CLP_${document.getElementById('productName').value.replace(/\s+/g, '_')}_${new Date().getTime()}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            html2pdf().set(opt).from(element).save();
+        }
+        
+        function printLabel() {
+            window.print();
+        }
+        
+        // Initialisation
+        document.getElementById('mfgDate').valueAsDate = new Date();
+        initPerfumeLibrary();
+    </script>
+</body>
+</html>
