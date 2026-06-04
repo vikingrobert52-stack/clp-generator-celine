@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Générateur CLP - L'Instant Fondant by Céline (Le Petit Grassois)</title>
+    <title>Générateur CLP - L'Instant Fondant by Céline</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -54,6 +54,7 @@
             position: sticky;
             top: 0;
             background: inherit;
+            z-index: 10;
         }
         
         .form-group { margin-bottom: 18px; }
@@ -64,7 +65,7 @@
             color: #880e4f;
             font-size: 14px;
         }
-        .form-group input, .form-group select {
+        .form-group input {
             width: 100%;
             padding: 12px;
             border: 2px solid #f8bbd9;
@@ -72,10 +73,9 @@
             font-size: 14px;
             background: white;
         }
-        .form-group input:focus, .form-group select:focus {
+        .form-group input:focus {
             outline: none;
             border-color: #d81b60;
-            box-shadow: 0 0 0 3px rgba(216, 27, 96, 0.1);
         }
         
         .category-section {
@@ -92,9 +92,6 @@
             margin-bottom: 12px;
             padding-bottom: 8px;
             border-bottom: 2px solid #f8bbd9;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
         
         .perfume-grid {
@@ -291,7 +288,7 @@
                 
                 <div class="form-group">
                     <label>🔍 Rechercher :</label>
-                    <input type="text" id="perfumeSearch" placeholder="Tape pour filtrer les parfums..." oninput="filterPerfumes()">
+                    <input type="text" id="perfumeSearch" placeholder="Tape pour filtrer..." oninput="filterPerfumes()">
                 </div>
                 
                 <div id="perfumeCategories"></div>
@@ -320,8 +317,7 @@
                     
                     <div id="placeholder" class="placeholder">
                         <div class="icon">🌸</div>
-                        <h3>Sélectionne un parfum du Petit Grassois</h3>
-                        <p style="margin-top: 10px; font-size: 12px;">Les étiquettes CLP seront générées automatiquement</p>
+                        <h3>Sélectionne un parfum</h3>
                     </div>
                     
                     <div id="labelPreview" style="display:none;">
@@ -351,7 +347,7 @@
                                 <h4>🔬 Composition</h4>
                                 <p id="lblComposition"></p>
                                 <p><strong>Allergènes:</strong> <span id="lblAllergens"></span></p>
-                                <p><strong>Teneur en parfum:</strong> <span id="lblFragrancePercent"></span>% dans cire végétale</p>
+                                <p><strong>Teneur en parfum:</strong> <span id="lblFragrancePercent"></span>%</p>
                             </div>
                             
                             <div class="label-section">
@@ -381,7 +377,7 @@
                     
                     <div class="info-box" style="margin-top: 20px;">
                         <h4>💡 Automatisation complète</h4>
-                        <p><strong>Toutes les données CLP sont pré-remplies automatiquement</strong> selon le parfum sélectionné (FDS, allergènes, pictogrammes, phrases H/P).</p>
+                        <p><strong>Toutes les données CLP sont pré-remplies automatiquement</strong> selon le parfum sélectionné.</p>
                     </div>
                 </div>
             </div>
@@ -389,120 +385,44 @@
     </div>
 
     <script>
-        // Base de données COMPLÈTE des vrais parfums du Petit Grassois
+        // VRAIS PICTOGRAMMES GHS OFFICIELS
+        const ghsSymbols = {
+            'GHS07': '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,2 98,50 50,98 2,50" fill="white" stroke="#d32f2f" stroke-width="5"/><circle cx="50" cy="40" r="4" fill="black"/><line x1="50" y1="48" x2="50" y2="72" stroke="black" stroke-width="5" stroke-linecap="round"/></svg>',
+            'GHS09': '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,2 98,50 50,98 2,50" fill="white" stroke="#d32f2f" stroke-width="5"/><path d="M28 58 Q40 48 55 58 Q70 48 80 58" fill="none" stroke="black" stroke-width="3"/><path d="M22 65 Q35 58 50 65 Q65 58 75 65" fill="none" stroke="black" stroke-width="2.5"/><path d="M50 30 L50 52 M50 52 Q60 57 65 52 Q70 47 75 54" fill="none" stroke="black" stroke-width="3"/><circle cx="38" cy="75" r="6" fill="none" stroke="black" stroke-width="2.5"/><path d="M35 80 Q40 86 44 81" fill="none" stroke="black" stroke-width="2"/><line x1="65" y1="72" x2="73" y2="80" stroke="black" stroke-width="2.5"/><line x1="73" y1="72" x2="65" y2="80" stroke="black" stroke-width="2.5"/></svg>'
+        };
+
         const perfumeDatabase = {
-            // FRUITS & GOURMANDS
-            'Fraise des bois': { category: 'Fruits & Gourmands', allergens: ['Linalool', 'Limonene', 'Citronellol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
             'Fraise et Menthe': { category: 'Fruits & Gourmands', allergens: ['Linalool', 'Limonene', 'Menthol compounds'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
             'Framboise caramel': { category: 'Fruits & Gourmands', allergens: ['Linalool', 'Coumarin', 'Vanillin'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
             'Fruits Rouges': { category: 'Fruits & Gourmands', allergens: ['Linalool', 'Limonene', 'Citronellol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
             'Ananas': { category: 'Fruits & Gourmands', allergens: ['Linalool', 'Limonene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
             'Citron': { category: 'Fruits & Gourmands', allergens: ['Limonene', 'Citral'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Citron Vert': { category: 'Fruits & Gourmands', allergens: ['Limonene', 'Citral', 'Linalool'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
             'Mangue': { category: 'Fruits & Gourmands', allergens: ['Linalool', 'Limonene', 'Benzyl Benzoate'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
             'Pêche': { category: 'Fruits & Gourmands', allergens: ['Linalool', 'Limonene', 'Coumarin'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Pomme': { category: 'Fruits & Gourmands', allergens: ['Linalool', 'Limonene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Pomme d\'Amour': { category: 'Fruits & Gourmands', allergens: ['Linalool', 'Limonene', 'Citral'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Cassis': { category: 'Fruits & Gourmands', allergens: ['Linalool', 'Citronellol', 'Geraniol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
             'Coco': { category: 'Fruits & Gourmands', allergens: ['Linalool', 'Benzyl Salicylate', 'Eugenol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Noix de Coco': { category: 'Fruits & Gourmands', allergens: ['Linalool', 'Benzyl Salicylate'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
             'Chocolat': { category: 'Fruits & Gourmands', allergens: ['Vanillin', 'Coumarin'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Caramel': { category: 'Fruits & Gourmands', allergens: ['Vanillin', 'Coumarin'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
             'Vanille': { category: 'Fruits & Gourmands', allergens: ['Vanillin', 'Linalool'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Vanille Bourbon': { category: 'Fruits & Gourmands', allergens: ['Vanillin', 'Linalool', 'Coumarin'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Praliné': { category: 'Fruits & Gourmands', allergens: ['Coumarin', 'Vanillin'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Noix de Macadamia': { category: 'Fruits & Gourmands', allergens: ['Coumarin', 'Linalool'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Miel': { category: 'Fruits & Gourmands', allergens: ['Linalool', 'Limonene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Bonbon': { category: 'Fruits & Gourmands', allergens: ['Linalool', 'Limonene', 'Vanillin'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Framboise': { category: 'Fruits & Gourmands', allergens: ['Linalool', 'Citronellol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Prune': { category: 'Fruits & Gourmands', allergens: ['Linalool', 'Limonene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            
-            // FLEURS
             'Rose': { category: 'Fleurs', allergens: ['Citronellol', 'Geraniol', 'Linalool', 'Eugenol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
             'Rose d\'Amour': { category: 'Fleurs', allergens: ['Citronellol', 'Geraniol', 'Linalool'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Rose Blanche': { category: 'Fleurs', allergens: ['Citronellol', 'Geraniol', 'Linalool'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
             'Jasmin': { category: 'Fleurs', allergens: ['Linalool', 'Benzyl Benzoate', 'Eugenol', 'Farnesol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
             'Lavande': { category: 'Fleurs', allergens: ['Linalool', 'Linalyl Acetate', 'Limonene', 'Geraniol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
             'Pivoine': { category: 'Fleurs', allergens: ['Linalool', 'Geraniol', 'Citronellol', 'Hexyl Cinnamal'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Tubéreuse': { category: 'Fleurs', allergens: ['Methyl Salicylate', 'Linalool', 'Eugenol', 'Benzyl Benzoate'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Fleur de Tiaré': { category: 'Fleurs', allergens: ['Linalool', 'Benzyl Salicylate', 'Eugenol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Tiaré': { category: 'Fleurs', allergens: ['Linalool', 'Benzyl Salicylate'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
             'Muguet': { category: 'Fleurs', allergens: ['Hydroxycitronellal', 'Hexyl Cinnamal', 'Linalool', 'Geraniol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Lilas': { category: 'Fleurs', allergens: ['Hydroxycitronellal', 'Linalool', 'Geraniol', 'Eugenol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Violette': { category: 'Fleurs', allergens: ['Ionones', 'Linalool'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Lys': { category: 'Fleurs', allergens: ['Linalool', 'Benzyl Benzoate', 'Eugenol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Fleur Blanche': { category: 'Fleurs', allergens: ['Linalool', 'Benzyl Salicylate', 'Eugenol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Fleur de Coton': { category: 'Fleurs', allergens: ['Linalool', 'Limonene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Tulipe': { category: 'Fleurs', allergens: ['Linalool', 'Limonene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Ylang-Ylang': { category: 'Fleurs', allergens: ['Linalool', 'Geraniol', 'Eugenol', 'Benzyl Benzoate', 'Farnesol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H319': 'Provoque une sévère irritation des yeux', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Gardénia': { category: 'Fleurs', allergens: ['Benzyl Salicylate', 'Linalool', 'Eugenol', 'Farnesol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Magnolia': { category: 'Fleurs', allergens: ['Linalool', 'Eugenol', 'Isoeugenol', 'Benzyl Salicylate'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Iris': { category: 'Fleurs', allergens: ['Ionones', 'Linalool'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Neroli': { category: 'Fleurs', allergens: ['Linalool', 'Limonene', 'Geraniol', 'Citral', 'Eugenol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Fleur d\'Oranger': { category: 'Fleurs', allergens: ['Linalool', 'Limonene', 'Geraniol', 'Citral', 'Eugenol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Azalée du Japon': { category: 'Fleurs', allergens: ['Linalool', 'Geraniol', 'Citronellol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            
-            // BOIS & NATURE
             'Bois de Santal': { category: 'Bois & Nature', allergens: ['Santalol', 'Linalool'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Santal': { category: 'Bois & Nature', allergens: ['Santalol', 'Linalool'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Bois de Cèdre': { category: 'Bois & Nature', allergens: ['Cedrol', 'Limonene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Cèdre': { category: 'Bois & Nature', allergens: ['Cedrol', 'Limonene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Bois Exotiques': { category: 'Bois & Nature', allergens: ['Santalol', 'Cedrol', 'Linalool'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Bois d\'Olivier': { category: 'Bois & Nature', allergens: ['Linalool', 'Limonene', 'Eugenol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Bois de Gaïac': { category: 'Bois & Nature', allergens: ['Guaiol', 'Linalool'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Vétiver': { category: 'Bois & Nature', allergens: ['Vetiverol', 'Limonene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
             'Patchouli': { category: 'Bois & Nature', allergens: ['Patchoulol', 'Linalool', 'Limonene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Oud': { category: 'Bois & Nature', allergens: ['Agarwood compounds', 'Linalool'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Musc': { category: 'Bois & Nature', allergens: ['Galaxolide', 'Tonalide'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
             'Musc Blanc': { category: 'Bois & Nature', allergens: ['Galaxolide', 'Tonalide'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
             'Bigarade & Musc Blanc': { category: 'Bois & Nature', allergens: ['Limonene', 'Linalool', 'Galaxolide'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Bambou': { category: 'Bois & Nature', allergens: ['Linalool', 'Limonene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Balade en Forêt': { category: 'Bois & Nature', allergens: ['Limonene', 'Linalool', 'Pinene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            
-            // FRAÎCHEUR & AROMATIQUE
-            'Bergamote': { category: 'Fraîcheur & Aromatique', allergens: ['Limonene', 'Linalool', 'Bergapten'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Verveine': { category: 'Fraîcheur & Aromatique', allergens: ['Citral', 'Linalool', 'Limonene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Menthe': { category: 'Fraîcheur & Aromatique', allergens: ['Menthol', 'Limonene', 'Linalool'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Eucalyptus': { category: 'Fraîcheur & Aromatique', allergens: ['Eucalyptol', 'Limonene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Thé Vert': { category: 'Fraîcheur & Aromatique', allergens: ['Linalool', 'Limonene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            
-            // ORIENTAL & COCOONING
             'Ambre': { category: 'Oriental & Cocooning', allergens: ['Linalool', 'Limonene', 'Citronellol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Ambre Doré': { category: 'Oriental & Cocooning', allergens: ['Linalool', 'Limonene', 'Coumarin'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Ambre Blanc': { category: 'Oriental & Cocooning', allergens: ['Linalool', 'Limonene', 'Vanillin'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Ambre Gris': { category: 'Oriental & Cocooning', allergens: ['Ambroxan', 'Linalool'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Encens': { category: 'Oriental & Cocooning', allergens: ['Limonene', 'Linalool'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
             'Fève Tonka': { category: 'Oriental & Cocooning', allergens: ['Coumarin', 'Vanillin'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Cannelle': { category: 'Oriental & Cocooning', allergens: ['Cinnamal', 'Eugenol', 'Coumarin'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H319': 'Provoque une sévère irritation des yeux', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Sel de Mer': { category: 'Oriental & Cocooning', allergens: ['Linalool', 'Limonene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Soleil': { category: 'Oriental & Cocooning', allergens: ['Linalool', 'Limonene', 'Benzyl Salicylate'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Tahiti': { category: 'Oriental & Cocooning', allergens: ['Linalool', 'Benzyl Salicylate', 'Eugenol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Coton': { category: 'Oriental & Cocooning', allergens: ['Linalool', 'Limonene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Balade Provençale': { category: 'Oriental & Cocooning', allergens: ['Linalool', 'Limonene', 'Lavandulol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
             'Attrape Rêve': { category: 'Oriental & Cocooning', allergens: ['Linalool', 'Benzyl Salicylate', 'Coumarin'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            
-            // SIGNATURE & MÉLANGES
-            'Poivre': { category: 'Signature & Mélanges', allergens: ['Limonene', 'Linalool'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Cardamome': { category: 'Signature & Mélanges', allergens: ['Linalool', 'Limonene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
-            'Cuir': { category: 'Signature & Mélanges', allergens: ['Isobutyl Quinoline', 'Linalool'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] }
-        };
-
-        // Pictogrammes GHS officiels
-        const ghsSymbols = {
-            'GHS02': `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,3 97,50 50,97 3,50" fill="white" stroke="#d32f2f" stroke-width="6"/><path d="M50 72 L50 48 L38 48 Z M50 78 C52.2 78 54 76.2 54 74 C54 71.8 52.2 70 50 70 C47.8 70 46 71.8 46 74 C46 76.2 47.8 78 50 78 Z" fill="black"/><path d="M42 35 Q50 32 58 35 L56 38 Q50 36 44 38 Z" fill="black"/></svg>`,
-            'GHS05': `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,3 97,50 50,97 3,50" fill="white" stroke="#d32f2f" stroke-width="6"/><path d="M32 38 L68 38 L64 62 L56 76 L44 76 L36 62 Z" fill="black"/><path d="M24 80 L76 80 M24 84 L76 84" stroke="black" stroke-width="3"/><line x1="38" y1="52" x2="48" y2="52" stroke="white" stroke-width="3"/><line x1="43" y1="47" x2="43" y2="57" stroke="white" stroke-width="3"/></svg>`,
-            'GHS07': `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,3 97,50 50,97 3,50" fill="white" stroke="#d32f2f" stroke-width="6"/><circle cx="50" cy="42" r="8" fill="black"/><rect x="46" y="54" width="8" height="22" rx="2" fill="black"/></svg>`,
-            'GHS08': `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,3 97,50 50,97 3,50" fill="white" stroke="#d32f2f" stroke-width="6"/><circle cx="50" cy="32" r="9" fill="none" stroke="black" stroke-width="4"/><path d="M50 41 L50 68 M38 52 Q50 46 62 52 M32 70 Q50 80 68 70" fill="none" stroke="black" stroke-width="4" stroke-linecap="round"/><line x1="28" y1="78" x2="72" y2="78" stroke="black" stroke-width="3"/></svg>`,
-            'GHS09': `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,3 97,50 50,97 3,50" fill="white" stroke="#d32f2f" stroke-width="6"/><path d="M28 58 Q40 48 55 58 Q70 48 80 58" fill="none" stroke="black" stroke-width="3"/><path d="M22 65 Q35 58 50 65 Q65 58 75 65" fill="none" stroke="black" stroke-width="2.5"/><path d="M50 32 L50 52 M50 52 Q60 57 65 52 Q70 47 75 54" fill="none" stroke="black" stroke-width="3"/><circle cx="38" cy="75" r="7" fill="none" stroke="black" stroke-width="3"/><path d="M35 81 Q40 87 44 82" fill="none" stroke="black" stroke-width="2.5"/><line x1="65" y1="72" x2="73" y2="80" stroke="black" stroke-width="2.5"/><line x1="73" y1="72" x2="65" y2="80" stroke="black" stroke-width="2.5"/></svg>`
+            'Balade en Forêt': { category: 'Bois & Nature', allergens: ['Limonene', 'Linalool', 'Pinene'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] }
         };
 
         const pPhrases = {
             'P261': 'Éviter de respirer les poussières/fumées/gaz',
-            'P264': 'Se laver soigneusement les mains après manipulation',
             'P272': 'Ne pas rejeter dans l\'environnement',
             'P280': 'Porter des gants de protection',
             'P302+P352': 'EN CAS DE CONTACT AVEC LA PEAU: laver abondamment à l\'eau',
-            'P305+P351+P338': 'EN CAS DE CONTACT AVEC LES YEUX: rincer à l\'eau',
             'P333+P313': 'En cas d\'irritation ou d\'éruption cutanée: consulter un médecin',
             'P501': 'Éliminer le contenu/récipient conformément à la réglementation'
         };
@@ -515,15 +435,13 @@
                 'Fruits & Gourmands': '🍬',
                 'Fleurs': '🌸',
                 'Bois & Nature': '🪵',
-                'Fraîcheur & Aromatique': '🌿',
-                'Oriental & Cocooning': '✨',
-                'Signature & Mélanges': '⭐'
+                'Oriental & Cocooning': '✨'
             };
 
             Object.entries(categories).forEach(([category, icon]) => {
                 const perfumes = Object.entries(perfumeDatabase)
                     .filter(([name, data]) => data.category === category)
-                    .map(([name, data]) => name)
+                    .map(([name]) => name)
                     .sort();
 
                 if (perfumes.length > 0) {
@@ -569,7 +487,6 @@
             const fragrancePercent = document.getElementById('fragrancePercent').value;
             const mfgDate = document.getElementById('mfgDate').value;
 
-            // Pictogrammes
             const pictoContainer = document.getElementById('pictograms');
             pictoContainer.innerHTML = '';
             selectedPerfume.pictograms.forEach(code => {
@@ -579,7 +496,6 @@
                 pictoContainer.appendChild(div);
             });
 
-            // Mentions H
             const hList = document.getElementById('lblHPhrases');
             hList.innerHTML = '';
             Object.entries(selectedPerfume.hPhrases).forEach(([code, text]) => {
@@ -588,7 +504,6 @@
                 hList.appendChild(li);
             });
 
-            // Phrases P
             const pList = document.getElementById('lblPPhrases');
             pList.innerHTML = '';
             ['P261', 'P272', 'P280', 'P302+P352', 'P333+P313', 'P501'].forEach(code => {
@@ -597,7 +512,6 @@
                 pList.appendChild(li);
             });
 
-            // Remplissage
             document.getElementById('lblProductName').textContent = selectedPerfume.name;
             document.getElementById('lblNetWeight').textContent = netWeight;
             document.getElementById('lblFragrancePercent').textContent = fragrancePercent;
@@ -629,7 +543,6 @@
             window.print();
         }
 
-        // Init
         document.getElementById('mfgDate').valueAsDate = new Date();
         renderPerfumeCategories();
     </script>
