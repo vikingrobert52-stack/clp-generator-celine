@@ -227,13 +227,20 @@
             flex-wrap: wrap;
         }
         .ghs-pictogram {
-            width: 65px;
-            height: 65px;
+            width: 70px;
+            height: 70px;
+            border: 3px solid #d32f2f;
+            transform: rotate(45deg);
+            margin: 10px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .ghs-pictogram img { 
-            width: 100%; 
-            height: 100%;
-            object-fit: contain;
+        .ghs-pictogram svg {
+            transform: rotate(-45deg);
+            width: 50px;
+            height: 50px;
         }
         
         .label-section {
@@ -454,11 +461,6 @@
             'P501': 'Éliminer le contenu/récipient conformément à la réglementation'
         };
 
-        const ghsImages = {
-            'GHS07': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cG9seWdvbiBwb2ludHM9IjUwLDIgOTgsNTAgNTAsOTggMiw1MCIgZmlsbD0id2hpdGUiIHN0cm9rZT0iI2QzMmYyZiIgc3Ryb2tlLXdpZHRoPSI1Ii8+PGNpcmNsZSBjeD0iNTAiIGN5PSI0MiIgcj0iNSIgZmlsbD0iYmxhY2siLz48bGluZSB4MT0iNTAiIHkxPSI1MiIgeDI9IjUwIiB5Mj0iNzgiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iNiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+',
-            'GHS09': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cG9seWdvbiBwb2ludHM9IjUwLDIgOTgsNTAgNTAsOTggMiw1MCIgZmlsbD0id2hpdGUiIHN0cm9rZT0iI2QzMmYyZiIgc3Ryb2tlLXdpZHRoPSI1Ii8+PHBhdGggZD0iTTI1IDU1IFE0MCA0NSA1NSA1NSBRNzAgNDUgODAgNTUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMyIvPjxwYXRoIGQ9Ik0yMCA2MiBRMzUgNTUgNTAgNjIgUTY1IDU1IDc1IDYyIiBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBzdHJva2Utd2lkdGg9IjIuNSIvPjxwYXRoIGQ9Ik01MCAyOCBMNTAgNTAgTTUwIDUwIFE2MCA1NSA2NSA1MCBRNzAgNDUgNzUgNTIiIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMyIvPjxjaXJjbGUgY3g9IjM1IiBjeT0iNzIiIHI9IjciIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMyIvPjxwYXRoIGQ9Ik0zMiA3NyBRMzcgODMgNDIgNzgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMi41Ii8+PGxpbmUgeDE9IjYzIiB5MT0iNzAiIHgyPSI3MiIgeTI9Ijc5IiBzdHJva2U9ImJsYWNrIiBzdHJva2Utd2lkdGg9IjIuNSIvPjxsaW5lIHgxPSI3MiIgeTE9IjcwIiB4Mj0iNjMiIHkyPSI3OSIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIyLjUiLz48L3N2Zz4='
-        };
-
         let selectedPerfumes = [];
 
         function renderPerfumeCategories() {
@@ -562,16 +564,23 @@
 
             document.getElementById('lblProductName').textContent = productName;
 
-            // Pictogrammes avec images en base64
+            // Pictogrammes GHS officiels en SVG
             const pictoContainer = document.getElementById('pictograms');
             pictoContainer.innerHTML = '';
             allPictograms.forEach(code => {
                 const div = document.createElement('div');
                 div.className = 'ghs-pictogram';
-                const img = document.createElement('img');
-                img.src = ghsImages[code];
-                img.alt = code;
-                div.appendChild(img);
+                
+                let svgContent = '';
+                if (code === 'GHS07') {
+                    // Point d'exclamation
+                    svgContent = '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="45" r="6" fill="black"/><rect x="45" y="55" width="10" height="25" rx="3" fill="black"/></svg>';
+                } else if (code === 'GHS09') {
+                    // Danger environnement - arbre mort et poisson mort
+                    svgContent = '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M50 20 L50 55 M50 35 L35 45 M50 40 L65 50 M50 55 Q35 60 30 55 Q25 50 35 45 Q50 40 65 45 Q75 50 70 55 Q65 60 50 55" fill="none" stroke="black" stroke-width="3"/><circle cx="35" cy="75" r="8" fill="none" stroke="black" stroke-width="2.5"/><line x1="30" y1="75" x2="40" y2="75" stroke="black" stroke-width="2"/><line x1="65" y1="70" x2="75" y2="80" stroke="black" stroke-width="2.5"/><line x1="75" y1="70" x2="65" y2="80" stroke="black" stroke-width="2.5"/></svg>';
+                }
+                
+                div.innerHTML = svgContent;
                 pictoContainer.appendChild(div);
             });
 
