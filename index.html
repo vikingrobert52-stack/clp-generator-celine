@@ -227,12 +227,13 @@
             flex-wrap: wrap;
         }
         .ghs-pictogram {
-            width: 60px;
-            height: 60px;
+            width: 65px;
+            height: 65px;
         }
-        .ghs-pictogram svg { 
+        .ghs-pictogram img { 
             width: 100%; 
             height: 100%;
+            object-fit: contain;
         }
         
         .label-section {
@@ -428,15 +429,6 @@
     </div>
 
     <script>
-        // PICTOGRAMMES GHS OFFICIELS EN SVG
-        const ghsSVG = {
-            'GHS07': '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,2 98,50 50,98 2,50" fill="white" stroke="#d32f2f" stroke-width="5"/><circle cx="50" cy="42" r="5" fill="black"/><line x1="50" y1="52" x2="50" y2="78" stroke="black" stroke-width="6" stroke-linecap="round"/></svg>',
-            'GHS09': '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,2 98,50 50,98 2,50" fill="white" stroke="#d32f2f" stroke-width="5"/><path d="M25 55 Q40 45 55 55 Q70 45 80 55" fill="none" stroke="black" stroke-width="3"/><path d="M20 62 Q35 55 50 62 Q65 55 75 62" fill="none" stroke="black" stroke-width="2.5"/><path d="M50 28 L50 50 M50 50 Q60 55 65 50 Q70 45 75 52" fill="none" stroke="black" stroke-width="3"/><circle cx="35" cy="72" r="7" fill="none" stroke="black" stroke-width="3"/><path d="M32 77 Q37 83 42 78" fill="none" stroke="black" stroke-width="2.5"/><line x1="63" y1="70" x2="72" y2="79" stroke="black" stroke-width="2.5"/><line x1="72" y1="70" x2="63" y2="79" stroke="black" stroke-width="2.5"/></svg>',
-            'GHS02': '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,2 98,50 50,98 2,50" fill="white" stroke="#d32f2f" stroke-width="5"/><path d="M50 70 L50 45 L38 45 Z M50 76 C52.5 76 54.5 74 54.5 71.5 C54.5 69 52.5 67 50 67 C47.5 67 45.5 69 45.5 71.5 C45.5 74 47.5 76 50 76 Z" fill="black"/><path d="M42 32 Q50 29 58 32 L56 35 Q50 33 44 35 Z" fill="black"/></svg>',
-            'GHS05': '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,2 98,50 50,98 2,50" fill="white" stroke="#d32f2f" stroke-width="5"/><path d="M32 40 L68 40 L64 62 L56 74 L44 74 L36 62 Z" fill="black"/><path d="M24 78 L76 78 M24 82 L76 82" stroke="black" stroke-width="3"/><line x1="38" y1="54" x2="48" y2="54" stroke="white" stroke-width="3"/><line x1="43" y1="49" x2="43" y2="59" stroke="white" stroke-width="3"/></svg>',
-            'GHS08': '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><polygon points="50,2 98,50 50,98 2,50" fill="white" stroke="#d32f2f" stroke-width="5"/><circle cx="50" cy="32" r="8" fill="none" stroke="black" stroke-width="3.5"/><path d="M50 40 L50 68 M38 50 Q50 44 62 50 M32 70 Q50 80 68 70" fill="none" stroke="black" stroke-width="3.5" stroke-linecap="round"/><line x1="28" y1="78" x2="72" y2="78" stroke="black" stroke-width="3"/></svg>'
-        };
-
         const perfumeDatabase = {
             'Citron': { category: 'Fruits & Gourmands', allergens: ['Limonene', 'Citral'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
             'Coco': { category: 'Fruits & Gourmands', allergens: ['Linalool', 'Benzyl Salicylate', 'Eugenol'], hPhrases: {'H317': 'Peut provoquer une allergie cutanée', 'H411': 'Toxique pour les organismes aquatiques'}, pictograms: ['GHS07', 'GHS09'] },
@@ -460,6 +452,11 @@
             'P302+P352': 'EN CAS DE CONTACT AVEC LA PEAU: laver abondamment à l\'eau',
             'P333+P313': 'En cas d\'irritation ou d\'éruption cutanée: consulter un médecin',
             'P501': 'Éliminer le contenu/récipient conformément à la réglementation'
+        };
+
+        const ghsImages = {
+            'GHS07': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cG9seWdvbiBwb2ludHM9IjUwLDIgOTgsNTAgNTAsOTggMiw1MCIgZmlsbD0id2hpdGUiIHN0cm9rZT0iI2QzMmYyZiIgc3Ryb2tlLXdpZHRoPSI1Ii8+PGNpcmNsZSBjeD0iNTAiIGN5PSI0MiIgcj0iNSIgZmlsbD0iYmxhY2siLz48bGluZSB4MT0iNTAiIHkxPSI1MiIgeDI9IjUwIiB5Mj0iNzgiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iNiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+',
+            'GHS09': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cG9seWdvbiBwb2ludHM9IjUwLDIgOTgsNTAgNTAsOTggMiw1MCIgZmlsbD0id2hpdGUiIHN0cm9rZT0iI2QzMmYyZiIgc3Ryb2tlLXdpZHRoPSI1Ii8+PHBhdGggZD0iTTI1IDU1IFE0MCA0NSA1NSA1NSBRNzAgNDUgODAgNTUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMyIvPjxwYXRoIGQ9Ik0yMCA2MiBRMzUgNTUgNTAgNjIgUTY1IDU1IDc1IDYyIiBmaWxsPSJub25lIiBzdHJva2U9ImJsYWNrIiBzdHJva2Utd2lkdGg9IjIuNSIvPjxwYXRoIGQ9Ik01MCAyOCBMNTAgNTAgTTUwIDUwIFE2MCA1NSA2NSA1MCBRNzAgNDUgNzUgNTIiIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMyIvPjxjaXJjbGUgY3g9IjM1IiBjeT0iNzIiIHI9IjciIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMyIvPjxwYXRoIGQ9Ik0zMiA3NyBRMzcgODMgNDIgNzgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMi41Ii8+PGxpbmUgeDE9IjYzIiB5MT0iNzAiIHgyPSI3MiIgeTI9Ijc5IiBzdHJva2U9ImJsYWNrIiBzdHJva2Utd2lkdGg9IjIuNSIvPjxsaW5lIHgxPSI3MiIgeTE9IjcwIiB4Mj0iNjMiIHkyPSI3OSIgc3Ryb2tlPSJibGFjayIgc3Ryb2tlLXdpZHRoPSIyLjUiLz48L3N2Zz4='
         };
 
         let selectedPerfumes = [];
@@ -565,13 +562,16 @@
 
             document.getElementById('lblProductName').textContent = productName;
 
-            // Pictogrammes SVG
+            // Pictogrammes avec images en base64
             const pictoContainer = document.getElementById('pictograms');
             pictoContainer.innerHTML = '';
             allPictograms.forEach(code => {
                 const div = document.createElement('div');
                 div.className = 'ghs-pictogram';
-                div.innerHTML = ghsSVG[code] || '';
+                const img = document.createElement('img');
+                img.src = ghsImages[code];
+                img.alt = code;
+                div.appendChild(img);
                 pictoContainer.appendChild(div);
             });
 
